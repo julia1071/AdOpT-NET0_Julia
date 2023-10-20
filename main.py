@@ -78,33 +78,40 @@ data.read_import_price_data('onshore', 'gas', gas_price)
 data.read_technology_data(load_path = './scaling_data/technology_data')
 data.read_network_data(load_path = './scaling_data/network_data')
 
-
-# SAVING/LOADING DATA FILE
+# UNSCALED
 configuration = ModelConfiguration()
 configuration.reporting.save_path = './userData/Scaling'
-# configuration.scaling = 0
-#
-# # # Read data
-# energyhub = EnergyHub(data, configuration)
-# energyhub.quick_solve()
+configuration.reporting.case_name = 'unscaled_withpresolve'
 
-# SAVING/LOADING DATA FILE
 configuration.scaling = 0
 configuration.scaling_factors.energy_vars = 1e-2
 configuration.scaling_factors.cost_vars = 1
 
-# # Read data
 energyhub = EnergyHub(data, configuration)
-configure_logging(save_path= Path('./diagnostics/infeasibility_log.txt'))
 energyhub.quick_solve()
-# get_infeasibile_constraints(energyhub.model, tolerance=1e-4)
 
+# SCALED WITH WARMSTART
+energyhub.configuration.reporting.case_name = 'scaled_withwarmstart'
 energyhub.configuration.scaling = 1
-
-time.sleep(5)
-
 energyhub.solve()
-# get_infeasibile_constraints(energyhub.model, tolerance=1e-4)
 
+# SCALED WITHOUT WARMSTART
+configuration.scaling = 1
+configuration.scaling_factors.energy_vars = 1e-2
+configuration.scaling_factors.cost_vars = 1
+configuration.reporting.case_name = 'scaled_withoutwarmstart'
+energyhub = EnergyHub(data, configuration)
+energyhub.quick_solve()
 
-# results.write_excel('./userData/', 'test')
+# UNSCALED WITHOUT PRESOLVE
+configuration = ModelConfiguration()
+configuration.reporting.save_path = './userData/Scaling'
+configuration.reporting.case_name = 'unscaled_withoutpresolve'
+
+configuration.scaling = 0
+configuration.scaling_factors.energy_vars = 1e-2
+configuration.scaling_factors.cost_vars = 1
+configuration.solveroptions.presolve = 0
+
+energyhub = EnergyHub(data, configuration)
+energyhub.quick_solve()
