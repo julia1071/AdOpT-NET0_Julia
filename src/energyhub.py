@@ -9,8 +9,6 @@ from pathlib import Path
 import os
 import sys
 
-from diagnostics import configure_logging
-import logging
 from .model_construction import *
 from .data_management import *
 from .utilities import *
@@ -482,8 +480,6 @@ class EnergyHub:
             result_folder_path = Path.joinpath(save_path, time_stamp)
 
         create_save_folder(result_folder_path)
-
-        configure_logging(Path.joinpath(result_folder_path, 'pyub_log.txt'))
 
         if self.configuration.scaling == 1:
             self.scale_model()

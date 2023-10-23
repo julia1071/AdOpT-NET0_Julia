@@ -15,7 +15,7 @@ data_save_path = Path('./user_data/data_handle_test')
 
 # TOPOLOGY
 topology = dm.SystemTopology()
-topology.define_time_horizon(year=2001,start_date='01-01 00:00', end_date='01-01 01:00', resolution=1)
+topology.define_time_horizon(year=2001,start_date='01-01 00:00', end_date='12-31 23:00', resolution=1)
 topology.define_carriers(['electricity', 'gas', 'hydrogen', 'heat'])
 # topology.define_nodes(['onshore'])
 topology.define_nodes(['onshore', 'offshore'])
@@ -65,11 +65,11 @@ data.read_import_emissionfactor_data('onshore', 'electricity', np.ones(len(data.
 # production_prof = np.ones(len(topology.timesteps)) * 1000
 # data.read_production_profile('onshore', 'electricity', production_prof, 1)
 
-carbontax = np.ones(len(topology.timesteps)) * 11
-carbonsubsidy = np.ones(len(topology.timesteps)) * 11
-
-data.read_carbon_price_data(carbontax, 'tax')
-data.read_carbon_price_data(carbonsubsidy, 'subsidy')
+# carbontax = np.ones(len(topology.timesteps)) * 11
+# carbonsubsidy = np.ones(len(topology.timesteps)) * 11
+#
+# data.read_carbon_price_data(carbontax, 'tax')
+# data.read_carbon_price_data(carbonsubsidy, 'subsidy')
 
 gas_price = np.ones(len(topology.timesteps)) * 70
 data.read_import_price_data('onshore', 'gas', gas_price)
