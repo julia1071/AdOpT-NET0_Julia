@@ -1,0 +1,4 @@
+{
+    "existing": {"Boiler_Small_NG": 0.001},
+    "new": ["Photovoltaic", "HeatPump_AirSourced", "Storage_Battery"]
+}
