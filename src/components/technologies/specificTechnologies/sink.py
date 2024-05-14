@@ -6,8 +6,8 @@ from warnings import warn
 import h5py
 import numpy as np
 
-from ..utilities import FittedPerformance
-from ..technology import Technology
+from src.components.technologies.utilities import FittedPerformance
+from src.components.technologies.technology import Technology
 from src.components.utilities import annualize, set_discount_rate
 
 
