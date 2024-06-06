@@ -1,20 +1,21 @@
 import h5py
+from pathlib import Path
+import os
 
-from .utilities import *
 from pyomo.environ import ConcreteModel
+from ..logger import log_event
+from ..utilities import get_set_t
 
 
-def get_summary(
-    model: ConcreteModel, solution: object, folder_path: Path, model_info: dict
-) -> dict:
+def get_summary(model, solution, folder_path: Path, model_info: dict) -> dict:
     """
     Retrieves all variable values relevant for the summary of an optimization run.
 
     These variables and their values are written to a dictionary.
 
-    :param ConcreteModel model: the model for which you want to obtain the results summary.
-    :param object solution: Pyomo solver results
-    :param folder_path: folder path of optimization run
+    :param model: the model for which you want to obtain the results summary.
+    :param solution: Pyomo solver results
+    :param Path folder_path: folder path of optimization run
     :param dict model_info: information of the last solve done by the model
     :return: a dictionary containing the most important model results (i.e., summary_dict)
     :rtype: dict
@@ -74,7 +75,12 @@ def get_summary(
     )
 
     # summary: retrieve / calculate solver status
-    summary_dict["time_total"] = solution.solver(0).wallclock_time
+    try:
+        int(solution.solver(0).wallclock_time)
+        time = solution.solver(0).wallclock_time
+    except:
+        time = 0
+    summary_dict["time_total"] = time
     summary_dict["lb"] = solution.problem(0).lower_bound
     summary_dict["ub"] = solution.problem(0).upper_bound
     summary_dict["absolute gap"] = (
@@ -88,18 +94,16 @@ def get_summary(
     ]
     summary_dict["pareto_point"] = model_info["pareto_point"]
     summary_dict["monte_carlo_run"] = model_info["monte_carlo_run"]
+    summary_dict["time_stage"] = model_info["time_stage"]
 
-    # Fixme: averaging algorithm
-    # time_stage = get_time_stage(energyhub)
-    # summary_dict["time_stage"] = time_stage
+    summary_dict["case"] = model_info["config"]["reporting"]["case_name"]["value"]
+
     summary_dict["time_stamp"] = str(folder_path)
 
     return summary_dict
 
 
-def write_optimization_results_to_h5(
-    model: ConcreteModel, solution: object, model_info: dict, data: dict
-) -> dict:
+def write_optimization_results_to_h5(model, solution, model_info: dict, data) -> dict:
     """
     Collects the results from the model blocks and writes them to an HDF5 file
 
@@ -108,14 +112,31 @@ def write_optimization_results_to_h5(
     Overhead (calculation of variables) are placed in the utilities file.
 
     :param ConcreteModel model: the model for which you want to save the results to an HDF5 file.
-    :param object solution: Pyomo solver results
+    :param solution: Pyomo solver results
     :param dict model_info: information of the last solve done by the model
-    :param dict data: a dictionary containing all data read in by the DataHandle class.
+    :param data: DataHandle object containing all data read in by the DataHandle class.
     :return: a dictionary containing the most important model results (i.e., summary_dict)
     :rtype: dict
     """
+
+    def read_value_from_parameter(para) -> list:
+        """
+        Reads parameter values from a pyomo parameter
+
+        :param para: pyomo parameter
+        :return: values as a list
+        :rtype: list
+        """
+        if para.mutable:
+            return [para[t, car].value for t in set_t]
+        else:
+            return [para[t, car] for t in set_t]
+
     config = model_info["config"]
     folder_path = model_info["result_folder_path"]
+
+    # LOG
+    log_event(f"Writing results to {folder_path}")
 
     # create the results h5 file in the results folder
     h5_file_path = os.path.join(folder_path, "optimization_results.h5")
@@ -126,14 +147,27 @@ def write_optimization_results_to_h5(
         # SUMMARY [g]: convert dictionary to h5 datasets
         summary = f.create_group("summary")
         for key in summary_dict:
-            summary.create_dataset(key, data=summary_dict[key])
+            if summary_dict[key] is None:
+                value = -1
+            else:
+                value = summary_dict[key]
+            summary.create_dataset(key, data=value)
+
+        # TIME AGGREGATION INFORMATION [g]:
+        # K-means specs
+        k_means_specs = f.create_group("k_means_specs")
+        for investment_period in data.k_means_specs:
+            k_means_specs_period = k_means_specs.create_group(investment_period)
+            for key in data.k_means_specs[investment_period]:
+                k_means_specs_period.create_dataset(
+                    key, data=data.k_means_specs[investment_period][key]
+                )
 
         # Topology Information
         topology = f.create_group("topology")
         topology.create_dataset("nodes", data=list(model.set_nodes))
+        topology.create_dataset("periods", data=list(model.set_periods))
         topology.create_dataset("carriers", data=list(model.set_carriers))
-
-        aggregation_type = "full"
 
         # TIME-INDEPENDENT RESULTS (design) [g]
         g_design = f.create_group("design")
@@ -145,15 +179,15 @@ def write_optimization_results_to_h5(
             g_period_netw_design = networks_design.create_group(period)
 
             b_period = model.periods[period]
-            set_t = b_period.set_t_full
+            set_t = get_set_t(config, b_period)
 
             if not config["energybalance"]["copperplate"]["value"]:
                 for netw_name in b_period.set_networks:
                     netw_specific_group = g_period_netw_design.create_group(netw_name)
                     b_netw = b_period.network_block[netw_name]
-                    data.network_data[aggregation_type][period][
-                        netw_name
-                    ].write_results_netw_design(netw_specific_group, b_netw)
+                    data.network_data[period][netw_name].write_results_netw_design(
+                        netw_specific_group, b_netw
+                    )
 
         # TIME-INDEPENDENT RESULTS: NODES [g]
         nodes_design = g_design.create_group("nodes")
@@ -168,7 +202,7 @@ def write_optimization_results_to_h5(
                 for tec_name in b_node.set_technologies:
                     tec_group = node_specific_group.create_group(tec_name)
                     b_tec = b_node.tech_blocks_active[tec_name]
-                    data.technology_data[aggregation_type][period][node_name][
+                    data.technology_data[period][node_name][
                         tec_name
                     ].write_results_tec_design(tec_group, b_tec)
 
@@ -187,9 +221,9 @@ def write_optimization_results_to_h5(
                         netw_name
                     )
                     b_netw = b_period.network_block[netw_name]
-                    data.network_data[aggregation_type][period][
-                        netw_name
-                    ].write_results_netw_operation(netw_specific_group, b_netw)
+                    data.network_data[period][netw_name].write_results_netw_operation(
+                        netw_specific_group, b_netw
+                    )
 
         # TECHNOLOGY OPERATION [g] > within: node > specific technology [g]
         tec_operation_group = operation.create_group("technology_operation")
@@ -203,7 +237,7 @@ def write_optimization_results_to_h5(
                 for tec_name in b_node.set_technologies:
                     tec_group = node_specific_group.create_group(tec_name)
                     b_tec = b_node.tech_blocks_active[tec_name]
-                    data.technology_data[aggregation_type][period][node_name][
+                    data.technology_data[period][node_name][
                         tec_name
                     ].write_results_tec_operation(tec_group, b_tec)
 
@@ -281,9 +315,18 @@ def write_optimization_results_to_h5(
                         "import",
                         data=[node_data.var_import_flow[t, car].value for t in set_t],
                     )
+
+                    car_group.create_dataset(
+                        "import_price",
+                        data=read_value_from_parameter(node_data.para_import_price),
+                    )
                     car_group.create_dataset(
                         "export",
                         data=[node_data.var_export_flow[t, car].value for t in set_t],
+                    )
+                    car_group.create_dataset(
+                        "export_price",
+                        data=read_value_from_parameter(node_data.para_export_price),
                     )
                     car_group.create_dataset(
                         "demand", data=[node_data.para_demand[t, car] for t in set_t]

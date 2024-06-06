@@ -11,19 +11,27 @@ from src.components.utilities import perform_disjunct_relaxation
 def define_network(
     load_path: Path, bidirectional: bool = False, energyconsumption: bool = False
 ):
+    """
+    reads TestNetwork from path and creates network object
+
+    :param Path load_path:
+    :param bool bidirectional:
+    :param bool energyconsumption:
+    :return: Network object
+    """
     with open(load_path / ("TestNetwork.json")) as json_file:
         netw_data = json.load(json_file)
 
     netw_data["name"] = "TestNetwork"
 
     if bidirectional:
-        netw_data["NetworkPerf"]["bidirectional"] = 1
-        netw_data["NetworkPerf"]["bidirectional_precise"] = 1
+        netw_data["Performance"]["bidirectional"] = 1
+        netw_data["Performance"]["bidirectional_precise"] = 1
     else:
-        netw_data["NetworkPerf"]["bidirectional"] = 0
+        netw_data["Performance"]["bidirectional"] = 0
 
     if not energyconsumption:
-        netw_data["NetworkPerf"]["energyconsumption"] = {}
+        netw_data["Performance"]["energyconsumption"] = {}
 
     netw_data = Network(netw_data)
 
@@ -31,15 +39,15 @@ def define_network(
 
 
 def construct_netw_model(
-    netw: Network,
+    netw,
     nr_timesteps: int,
-) -> pyo.ConcreteModel:
+):
     """
-    Construct a mock technology model for testing
+    Construct a mock network model for testing
 
-    :param Technology tec: Technology object.
-    :param int nr_timesteps: Number of timesteps to create climate data for
-    :return ConcreteModel m: Pyomo Concrete Model
+    :param netw: Network object.
+    :param int nr_timesteps: Number of timesteps to create network model for
+    :return: Pyomo Model
     """
 
     data = make_data_for_testing(nr_timesteps)
@@ -51,6 +59,7 @@ def construct_netw_model(
     netw.connection = netw_matrix
     netw.distance = netw_matrix
     netw.size_max_arcs = netw_matrix * 10
+    netw.fit_network_performance()
 
     m = pyo.ConcreteModel()
     m.set_t = pyo.Set(initialize=list(range(1, nr_timesteps + 1)))
@@ -65,6 +74,16 @@ def construct_netw_model(
 
 
 def test_network_unidirectional(request):
+    """
+    Tests a network that can only transport in one direction
+
+    INFEASIBILITY CASES
+    1) flow in both directions is constraint to 1
+
+    FEASIBILITY CASES
+    2) flow in one direction is constraint to 1, checked that size in both directions
+    is correct
+    """
     nr_timesteps = 1
     netw = define_network(
         request.config.network_data_folder_path,
@@ -91,9 +110,7 @@ def test_network_unidirectional(request):
     m.test_const_outflow1 = pyo.Constraint(
         expr=m.var_inflow[1, "hydrogen", "node1"] == 1
     )
-    m.test_const_outflow1 = pyo.Constraint(
-        expr=m.var_inflow[1, "hydrogen", "node1"] == 1
-    )
+
     termination = run_model(m, request.config.solver, objective="capex")
     assert termination == pyo.TerminationCondition.optimal
     assert round(m.arc_block["node2", "node1"].var_size.value, 3) == round(
@@ -103,6 +120,13 @@ def test_network_unidirectional(request):
 
 
 def test_network_bidirectional(request):
+    """
+    Tests a network that can transport in two directions
+
+    FEASIBILITY CASES
+    1) flow in one direction is constraint to 1, in the other direction to 2, checked
+    that size in both directions is different.
+    """
     nr_timesteps = 1
     netw = define_network(
         request.config.network_data_folder_path,
@@ -128,6 +152,16 @@ def test_network_bidirectional(request):
 
 
 def test_network_energyconsumption(request):
+    """
+    Tests a network with an energy consumption
+
+    INFEASIBILITY CASES
+    1) constrains the flow in one direction to 1 and the energy consumption to 0
+
+    FEASIBILITY CASES
+    2) constrains the flow in one direction to 1 and checks if energy consumption is
+    larger 0
+    """
     nr_timesteps = 1
     netw = define_network(
         request.config.network_data_folder_path,

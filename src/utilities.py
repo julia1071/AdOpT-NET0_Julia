@@ -1,8 +1,13 @@
 from pyomo.environ import SolverFactory
-from .logger import logger
 
 
-def get_gurobi_parameters(solveroptions):
+def get_gurobi_parameters(solveroptions: dict):
+    """
+    Initiates the gurobi solver and defines solver parameters
+
+    :param dict solveroptions: dict with solver parameters
+    :return: Gurobi Solver
+    """
     solver = SolverFactory(solveroptions["solver"]["value"], solver_io="python")
     solver.options["TimeLimit"] = solveroptions["timelim"]["value"] * 3600
     solver.options["MIPGap"] = solveroptions["mipgap"]["value"]
@@ -22,22 +27,60 @@ def get_gurobi_parameters(solveroptions):
     return solver
 
 
-def get_glpk_parameters(solveroptions):
+def get_glpk_parameters(solveroptions: dict):
+    """
+    Initiates the glpk solver and defines solver parameters
+
+    :param dict solveroptions: dict with solver parameters
+    :return: Gurobi Solver
+    """
     solver = SolverFactory("glpk")
 
     return solver
 
 
-def log_event(message: str, print_it: int = 1, level: str = "info") -> None:
+def get_set_t(config: dict, model_block):
     """
-    Logs and prints a message
-    :param str message: Message to log
-    :param int print_it: [0,1] if message should also be printed
-    :param str level: ['info', 'warning'] which level to log
+    Returns the correct set_t for different clustering options
+
+    :param dict config: config dict
+    :param model_block: pyomo block holding set_t_full and set_t_clustered
+    :return: set_t
     """
-    if level == "info":
-        logger.info(message)
-    elif level == "warning":
-        logger.warning((message))
-    if print_it:
-        print(message)
+    if config["optimization"]["typicaldays"]["N"]["value"] == 0:
+        return model_block.set_t_full
+    elif config["optimization"]["typicaldays"]["method"]["value"] == 1:
+        return model_block.set_t_clustered
+    elif config["optimization"]["typicaldays"]["method"]["value"] == 2:
+        return model_block.set_t_full
+
+
+def get_hour_factors(config: dict, data, period: str) -> list:
+    """
+    Returns the correct hour factors to use for global balances
+
+    :param dict config: config dict
+    :param data: DataHandle
+    :return: hour factors
+    """
+    if config["optimization"]["typicaldays"]["N"]["value"] == 0:
+        return [1] * len(data.topology["time_index"]["full"])
+    elif config["optimization"]["typicaldays"]["method"]["value"] == 1:
+        return data.k_means_specs[period]["factors"]
+    elif config["optimization"]["typicaldays"]["method"]["value"] == 2:
+        return [1] * len(data.topology["time_index"]["full"])
+
+
+def get_nr_timesteps_averaged(config: dict) -> int:
+    """
+    Returns the correct number of timesteps averaged
+
+    :param dict config: config dict
+    :return: nr_timesteps_averaged
+    """
+    if config["optimization"]["timestaging"]["value"] != 0:
+        nr_timesteps_averaged = config["optimization"]["timestaging"]["value"]
+    else:
+        nr_timesteps_averaged = 1
+
+    return nr_timesteps_averaged

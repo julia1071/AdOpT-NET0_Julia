@@ -5,7 +5,7 @@
   "size_is_int": 0,
   "decommission": 0,
   "Economics": {
-    "comment": "CAPEX in EUR/tonne/h or as a piecewise function, OPEX_variable in EUR/tonne total output, OPEX_fixed in % of CAPEX_annual",
+    "comment": "CAPEX in EUR/tonne/hr or as a piecewise function, OPEX_variable in EUR/tonne total output, OPEX_fixed in % of CAPEX_annual",
     "CAPEX_model": 3,
     "unit_CAPEX": 787730,
     "fix_CAPEX": 2.06E+08,
@@ -14,24 +14,24 @@
       "bp_y": "not defined"
     },
     "OPEX_variable": 0,
-    "OPEX_fixed": 0.04,
+    "OPEX_fixed": 0.02,
     "discount_rate": 0.1,
     "lifetime": 25,
     "decommission_cost": 0
   },
-  "TechnologyPerf": {
+  "Performance": {
     "comment": "contains fitting data on unit of input, technology types and input/output carriers",
-    "performance_function_type": 1,
+    "performance_function_type": 2,
     "input_carrier": [
       "naphtha",
-      "gas"
+      "electricity"
     ],
     "main_input_carrier": "naphtha",
     "output_carrier": [
       "crackedgas",
       "steam"
     ],
-    "emission_factor": 0.3793,
+    "emission_factor": 0,
     "min_part_load": 0,
     "performance": {
       "in": [
@@ -45,13 +45,13 @@
         ],
         "steam": [
           0,
-          0.841
+          0.542
         ]
       }
     },
     "input_ratios": {
       "naphtha": 1,
-      "gas": 1.868
+      "electricity": 1.476
     },
     "ramping_time": -1,
     "ref_size": -1,
@@ -65,11 +65,12 @@
     "SD_load": -1,
     "max_startups": -1
   },
+  "DOI": "Data is published in: https://doi.org/10.1021/acs.iecr.3c02226",
   "Units": {
     "size": "tonne/hr",
     "input_carrier": {
       "naphtha": "tonne/hr",
-      "gas": "MW"
+      "electricity": "MW"
     },
     "output_carrier": {
       "crackedgas": "tonne/hr",
