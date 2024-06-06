@@ -225,7 +225,7 @@ class Stor(Technology):
         allow_only_one_direction = self.component_options.other[
             "allow_only_one_direction"
         ]
-        # sequence_storage = self.sequence
+
         if config["optimization"]["typicaldays"]["N"]["value"] == 0:
             sequence_storage = self.sequence
         elif config["optimization"]["typicaldays"]["method"]["value"] == 1:

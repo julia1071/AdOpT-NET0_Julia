@@ -385,8 +385,15 @@ class EnergyHub:
 
         model_info = self.last_solve_info
         # Write H5 File
-        if (self.solution.solver.status == pyo.SolverStatus.ok) or (
-            self.solution.solver.status == pyo.SolverStatus.warning
+        if (
+            (self.solution.solver.status == pyo.SolverStatus.ok)
+            or (self.solution.solver.status == pyo.SolverStatus.warning)
+        ) and not (
+            self.solution.solver.termination_condition
+            in [
+                pyo.TerminationCondition.infeasibleOrUnbounded,
+                pyo.TerminationCondition.infeasible,
+            ]
         ):
 
             model = self.model[self.info_solving_algorithms["aggregation_model"]]

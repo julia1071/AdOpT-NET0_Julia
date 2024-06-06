@@ -158,6 +158,13 @@ class Sink(Technology):
         coeff_ti = self.processed_coeff.time_independent
         dynamics = self.processed_coeff.dynamics
 
+        if config["optimization"]["typicaldays"]["N"]["value"] == 0:
+            sequence_storage = self.sequence
+        elif config["optimization"]["typicaldays"]["method"]["value"] == 1:
+            sequence_storage = data["k_means_specs"]["sequence"]
+        elif config["optimization"]["typicaldays"]["method"]["value"] == 2:
+            sequence_storage = self.sequence
+
         # Sotrage level and injection capacity decision variables
         b_tec.var_storage_level = pyo.Var(
             set_t_full,
@@ -187,7 +194,8 @@ class Sink(Technology):
                 return (
                     b_tec.var_storage_level[t]
                     == self.input[
-                        self.sequence[t - 1], self.component_options.main_input_carrier
+                        sequence_storage[t - 1],
+                        self.component_options.main_input_carrier,
                     ]
                 )
             else:
@@ -196,7 +204,8 @@ class Sink(Technology):
                     b_tec.var_storage_level[t]
                     == b_tec.var_storage_level[t - 1]
                     + self.input[
-                        self.sequence[t - 1], self.component_options.main_input_carrier
+                        sequence_storage[t - 1],
+                        self.component_options.main_input_carrier,
                     ]
                 )
 
