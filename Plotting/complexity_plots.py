@@ -113,13 +113,13 @@ ax.legend()
 plt.tight_layout()
 
 
-saveas = '0'
+saveas = 'svg'
 
 if saveas == 'svg':
     savepath = 'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/Paper/' + 'complexity_' + str(run_for) + '.svg'
     plt.savefig(savepath, format='svg')
 if saveas == 'pdf':
-    savepath = 'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/Paper/' + 'complexity_' + str(run_for) + '.svg'
+    savepath = 'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/Paper/' + 'complexity_' + str(run_for) + '.pdf'
     plt.savefig(savepath, format='pdf')
 
 #show plot
