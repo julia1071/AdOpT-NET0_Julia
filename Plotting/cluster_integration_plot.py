@@ -14,9 +14,9 @@ resultfolder = "Z:/PyHub/PyHub_results/CM/Cluster_integration"
 data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data.xlsx'
 
 # select the type of plot from ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_spec_cor', 'size']
-plot_type = 'emissions_spec_cor'
+plot_type = 'costs_spec_cor'
 
-get_data = 1
+get_data = 0
 
 if get_data == 1:
     # Define the multi-level index for rows
@@ -190,10 +190,10 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
 
     # Create custom patches for the legend
     legend_elements = [
-        plt.Line2D([0], [0], color=colors[0], lw=4, alpha=0.5, label='cluster (reference CO$_2$ tax)'),
-        plt.Line2D([0], [0], color=colors[0], lw=4, label='cluster (high CO$_2$ tax)'),
-        plt.Line2D([0], [0], color=colors[1], lw=4, alpha=0.5, label='standalone (reference CO$_2$ tax)'),
-        plt.Line2D([0], [0], color=colors[1], lw=4,  label='standalone (high CO$_2$ tax)')
+        plt.Line2D([0], [0], color=colors[0], lw=4, alpha=0.5, label='cluster (R-CO$_2$P)'),
+        plt.Line2D([0], [0], color=colors[0], lw=4, label='cluster (H-CO$_2$P)'),
+        plt.Line2D([0], [0], color=colors[1], lw=4, alpha=0.5, label='standalone (R-CO$_2$P)'),
+        plt.Line2D([0], [0], color=colors[1], lw=4,  label='standalone (H-CO$_2$P)')
     ]
 
     # Plot each location

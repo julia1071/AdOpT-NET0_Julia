@@ -11,7 +11,7 @@ from adopt_net0 import extract_datasets_from_h5group
 
 # Define the data path
 resultfolder = "Z:/PyHub/PyHub_results/CM/Cluster_integration"
-data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long.xlsx'
+data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long2.xlsx'
 
 get_data = 1
 
@@ -20,7 +20,7 @@ if get_data == 1:
     columns = pd.MultiIndex.from_product(
         [
             ["Chemelot", "Zeeland"],
-            ["cluster"],
+            ["cluster", "ethylene", "ammonia", "standalone"],
             ["minC_ref", "minC_high", "minE"]
         ],
         names=["Location", "Type", "Scenario"]

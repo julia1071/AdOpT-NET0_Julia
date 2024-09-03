@@ -6,7 +6,7 @@ from matplotlib.ticker import PercentFormatter
 from adopt_net0 import extract_datasets_from_h5group
 
 # Define the data path
-run_for = 'minC_ref'
+run_for = 'minC_high'
 if run_for == 'minC_ref':
     resultfolder = "Z:/PyHub/PyHub_results/CM/Complexity/Chemelot_refCO2tax"
 elif run_for == 'minC_high':

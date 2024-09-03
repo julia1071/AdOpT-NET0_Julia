@@ -11,7 +11,7 @@ from adopt_net0 import extract_datasets_from_h5group
 
 # Define the data path
 resultfolder = "Z:/PyHub/PyHub_results/CM/Infrastructure"
-data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_infra.xlsx'
+data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_infra1.xlsx'
 
 # select the type of plot from ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_spec_cor', 'size']
 plot_type = 'costs_spec_cor'
@@ -134,7 +134,7 @@ plt.rcParams.update({
 })
 
 # Select data to plot
-locations = ['Chemelot']
+locations = ['Zeeland']
 types = ['Reference', 'eleclim', 'CO2lim0', 'CO2limHigh']
 scenarios = ['minC_ref', 'minC_high']
 
@@ -170,7 +170,7 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
             plt.bar(position, plot_data.loc[typ, scenario], bar_width, color=colors[i])
 
     # Configure x-axis and legend
-    plt.xticks(index + bar_width * (n_types - 1) / 2, ['Reference CO$_2$ tax', 'High CO$_2$ tax'])
+    plt.xticks(index + bar_width * (n_types - 1) / 2, ['Reference CO$_2$ emission price', 'High CO$_2$ emission price'])
     plt.legend(handles=legend_elements, loc='upper center', ncol=2)
 
     # Set y-axis label and file name
@@ -261,7 +261,7 @@ elif plot_type == 'size':
         total_ticks = len(scenarios) * len(types)
         tick_positions = index + (total_bars_per_scenario - 1) * (bar_width + bar_gap) / 2
         ax.set_yticks(tick_positions)
-        ax.set_yticklabels(['Reference CO$_2$ tax', 'High CO$_2$ tax'], rotation=0)
+        ax.set_yticklabels(['Reference CO$_2$ emission price', 'High CO$_2$ emission price'], rotation=0)
 
         ax.legend(loc='upper right')
 

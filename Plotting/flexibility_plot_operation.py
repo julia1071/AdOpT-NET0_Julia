@@ -158,7 +158,7 @@ def plot_import_profiles(import_profiles, el_price, el_price2, el_emissionrate, 
 
         for idx, ((location, typ, scenario), profile) in enumerate(import_profiles.items()):
             color = color_cycle[idx % len(color_cycle)]
-            label = f"{location} - {'Reference CO2 tax' if scenario == 'minC_ref' else 'High CO2 tax'}"
+            label = f"{location} - {'R-CO$_2$P' if scenario == 'minC_ref' else 'H-CO$_2$P'}"
             if relative:
                 max_import = profile.max()
                 ax1.plot(list(week_range), profile.iloc[week_range] / max_import, label=label, linewidth=0.75, color=color)
@@ -279,13 +279,16 @@ def main():
     custom_colors_operation = ['#422966', '#EEEEFF', '#EEBD6D', '#79AA74', '#28587B']
     custom_colors_import = ['#3F826D', '#E15F51', '#545E75', '#F2D0A4']
     overlay = "emission"
+    plot = "import"
 
-    plot_operation_profiles(operation_profiles, el_price2, el_emissionrate, overlay=overlay, colors=custom_colors_operation)
-    # plot_import_profiles(import_profiles, el_price, el_price2, el_emissionrate, relative=False, overlay=overlay, colors=custom_colors_import)
+    if plot == "operation":
+        plot_operation_profiles(operation_profiles, el_price2, el_emissionrate, overlay=overlay, colors=custom_colors_operation)
+    elif plot == "import":
+        plot_import_profiles(import_profiles, el_price, el_price2, el_emissionrate, relative=False, overlay=overlay, colors=custom_colors_import)
 
-    filename = 'operation_' + overlay
+    filename = plot + '_' + overlay
 
-    saveas = 'pdf'
+    saveas = 'svg'
     if saveas == 'svg':
         savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/Paper/{filename}.svg'
         plt.savefig(savepath, format='svg')
