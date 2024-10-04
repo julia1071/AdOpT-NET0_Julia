@@ -16,7 +16,7 @@ data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data.xlsx
 # select the type of plot from ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_spec_cor', 'size']
 plot_type = 'emissions_spec_cor'
 
-get_data = 1
+get_data = 0
 
 if get_data == 1:
     # Define the multi-level index for rows
@@ -158,8 +158,8 @@ plt.rcParams.update({
     "axes.labelsize": 12,
     "font.size": 12,
     "legend.fontsize": 10,
-    "xtick.labelsize": 10,
-    "ytick.labelsize": 10,
+    "xtick.labelsize": 12,
+    "ytick.labelsize": 12,
 })
 
 # Select data to plot
@@ -175,7 +175,7 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
     plot_data = plot_data.loc[types, scenarios]
 
     # Plotting
-    fig, ax = plt.subplots(figsize=(7, 5))
+    fig, ax = plt.subplots(figsize=(5.5, 3))
 
     # Define custom colors and layout
     colors = ['#F1DAC4', '#474973']
@@ -190,10 +190,10 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
 
     # Create custom patches for the legend
     legend_elements = [
-        plt.Line2D([0], [0], color=colors[0], lw=4, alpha=0.5, label='cluster (reference CO$_2$ tax)'),
-        plt.Line2D([0], [0], color=colors[0], lw=4, label='cluster (high CO$_2$ tax)'),
-        plt.Line2D([0], [0], color=colors[1], lw=4, alpha=0.5, label='standalone (reference CO$_2$ tax)'),
-        plt.Line2D([0], [0], color=colors[1], lw=4,  label='standalone (high CO$_2$ tax)')
+        plt.Line2D([0], [0], color=colors[0], lw=4, alpha=0.5, label='cluster (R-CO$_2$P)'),
+        plt.Line2D([0], [0], color=colors[0], lw=4, label='cluster (H-CO$_2$P)'),
+        plt.Line2D([0], [0], color=colors[1], lw=4, alpha=0.5, label='standalone (R-CO$_2$P)'),
+        plt.Line2D([0], [0], color=colors[1], lw=4,  label='standalone (H-CO$_2$P)')
     ]
 
     # Plot each location
@@ -223,10 +223,10 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
     plt.xticks(index + bar_width * (total_bars - 1) / 2, locations)
     if 'emission' in metric:
         plt.legend(handles=legend_elements + [
-            plt.Line2D([0], [0], color=colors[0], linestyle='--', label='cluster minimum emissions (Chemelot)'),
-            plt.Line2D([0], [0], color=colors[0], linestyle=':', label='cluster minimum emissions (Zeeland)'),
-            plt.Line2D([0], [0], color=colors[1], linestyle='--', label='standalone minimum emissions (Chemelot)'),
-            plt.Line2D([0], [0], color=colors[1], linestyle=':', label='standalone minimum emissions (Zeeland)')
+            plt.Line2D([0], [0], color=colors[0], linestyle='--', label='cluster min. (Chemelot)'),
+            plt.Line2D([0], [0], color=colors[0], linestyle=':', label='cluster min. (Zeeland)'),
+            plt.Line2D([0], [0], color=colors[1], linestyle='--', label='standalone min. (Chemelot)'),
+            plt.Line2D([0], [0], color=colors[1], linestyle=':', label='standalone min. (Zeeland)')
         ], loc='upper center', ncol=2)
     else:
         plt.legend(handles=legend_elements, loc='upper center', ncol=2)
@@ -238,14 +238,14 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
         ax.set_ylim(0, 2500)
         if 'cor' in metric:
             filename = filename + '_cor'
-            ax.set_ylim(0, 1200)
+            ax.set_ylim(0, 1400)
     elif 'emission' in metric:
-        plt.ylabel('Specific emissions [kg CO$_2$/tonne product]')
+        plt.ylabel(r'Specific emissions \\[0.1em] [kg CO$_2$/tonne product]')
         filename = 'integration_emissions'
         ax.set_ylim(0, 1.4)
         if 'cor' in metric:
             filename = filename + '_cor'
-            ax.set_ylim(0, 0.6)
+            ax.set_ylim(0, 0.8)
 
     # Adjust layout
     plt.tight_layout()

@@ -14,7 +14,7 @@ resultfolder = "Z:/PyHub/PyHub_results/CM/Infrastructure"
 data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_infra.xlsx'
 
 # select the type of plot from ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_spec_cor', 'size']
-plot_type = 'costs_spec_cor'
+plot_type = 'emissions_spec_cor'
 
 get_data = 0
 
@@ -128,9 +128,9 @@ plt.rcParams.update({
     "font.serif": ["Computer Modern Roman"],
     "axes.labelsize": 12,
     "font.size": 12,
-    "legend.fontsize": 10,
-    "xtick.labelsize": 10,
-    "ytick.labelsize": 10,
+    "legend.fontsize": 11,
+    "xtick.labelsize": 12,
+    "ytick.labelsize": 12,
 })
 
 # Select data to plot
@@ -146,7 +146,7 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
     plot_data = plot_data.loc[types, scenarios]
 
     # Initialize the plot
-    fig, ax = plt.subplots(figsize=(7, 5))
+    fig, ax = plt.subplots(figsize=(5, 3))
 
     # Define custom colors and layout
     colors = ['#36151E', '#7B6D8D', '#8499B1', '#A5C4D4']
@@ -159,9 +159,9 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
 
     legend_elements = [
         plt.Line2D([0], [0], color=colors[0], lw=4, label='Reference case'),
-        plt.Line2D([0], [0], color=colors[1], lw=4, label='Limited grid capacity'),
-        plt.Line2D([0], [0], color=colors[2], lw=4, label='Limited CO$_2$ T\&S capacity'),
-        plt.Line2D([0], [0], color=colors[3], lw=4, label='Increased CO$_2$ T\&S capacity')
+        plt.Line2D([0], [0], color=colors[1], lw=4, label='Limited grid'),
+        plt.Line2D([0], [0], color=colors[2], lw=4, label='Limited CO$_2$ T\&S'),
+        plt.Line2D([0], [0], color=colors[3], lw=4, label='Increased CO$_2$ T\&S')
     ]
 
     for j, scenario in enumerate(scenarios):
@@ -170,8 +170,9 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
             plt.bar(position, plot_data.loc[typ, scenario], bar_width, color=colors[i])
 
     # Configure x-axis and legend
-    plt.xticks(index + bar_width * (n_types - 1) / 2, ['Reference CO$_2$ tax', 'High CO$_2$ tax'])
-    plt.legend(handles=legend_elements, loc='upper center', ncol=2)
+    plt.xticks(index + bar_width * (n_types - 1) / 2, ['R-CO$_2$P', 'H-CO$_2$P'])
+    if locations[0] == 'Chemelot' and 'cost' in metric:
+        plt.legend(handles=legend_elements, loc='upper center', ncol=2)
 
     # Set y-axis label and file name
     if 'cost' in metric:
@@ -180,9 +181,9 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
         ax.set_ylim(0, 2500)
         if 'cor' in metric:
             filename += '_cor'
-            ax.set_ylim(0, 1000)
+            ax.set_ylim(0, 1200)
     elif 'emission' in metric:
-        plt.ylabel('Specific emissions [kg CO$_2$/tonne product]')
+        plt.ylabel(r'Specific emissions \\[0.1em] [kg CO$_2$/tonne product]')
         filename = locations[0] + '_infra_emissions'
         ax.set_ylim(0, 1.2)
         if 'cor' in metric:
@@ -193,7 +194,7 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
     plt.tight_layout()
 
     #save the file
-    saveas = 'pdf'
+    saveas = 'svg'
 
     if saveas == 'svg':
         savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/Paper/{filename}.svg'
@@ -261,7 +262,7 @@ elif plot_type == 'size':
         total_ticks = len(scenarios) * len(types)
         tick_positions = index + (total_bars_per_scenario - 1) * (bar_width + bar_gap) / 2
         ax.set_yticks(tick_positions)
-        ax.set_yticklabels(['Reference CO$_2$ tax', 'High CO$_2$ tax'], rotation=0)
+        ax.set_yticklabels(['Reference CO$_2$ emission price', 'High CO$_2$ emission price'], rotation=0)
 
         ax.legend(loc='upper right')
 

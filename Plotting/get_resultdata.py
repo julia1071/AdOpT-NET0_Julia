@@ -9,22 +9,34 @@ from matplotlib.colors import to_rgba
 from matplotlib.ticker import PercentFormatter
 from adopt_net0 import extract_datasets_from_h5group
 
+result_type = 'Infrastructure'
+
 # Define the data path
-resultfolder = "Z:/PyHub/PyHub_results/CM/Cluster_integration"
-data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long.xlsx'
+resultfolder = "Z:/PyHub/PyHub_results/CM/" + result_type
+data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long3.xlsx'
 
 get_data = 1
 
 if get_data == 1:
     # Define the multi-level index for rows
-    columns = pd.MultiIndex.from_product(
-        [
-            ["Chemelot", "Zeeland"],
-            ["cluster"],
-            ["minC_ref", "minC_high", "minE"]
-        ],
-        names=["Location", "Type", "Scenario"]
-    )
+    if result_type == 'Infrastructure':
+        columns = pd.MultiIndex.from_product(
+            [
+                ["Chemelot", "Zeeland"],
+                ["CO2lim0", "CO2limHigh", "eleclim",],
+                ["minC_ref", "minC_high"]
+            ],
+            names=["Location", "Type", "Scenario"]
+        )
+    elif result_type == 'Cluster_integration':
+        columns = pd.MultiIndex.from_product(
+            [
+                ["Chemelot", "Zeeland"],
+                ["cluster", "ethylene", "ammonia", "standalone"],
+                ["minC_ref", "minC_high", "minE"]
+            ],
+            names=["Location", "Type", "Scenario"]
+        )
 
     # Define the columns
     index = ["path", "costs_tot", "emissions_tot"]
