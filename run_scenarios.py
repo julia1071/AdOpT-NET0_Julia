@@ -14,8 +14,11 @@ if execute == 1:
     resultpath = "Z:/PyHub/PyHub_results/CM/Complexity/Chemelot"
     json_filepath = Path(casepath) / "ConfigModel.json"
 
-    co2tax = ['ref', 'high']
+    co2tax = ['high']
     TD = [10, 20, 40, 60, 100, 200, 0]
+    #
+    # co2tax = ['high']
+    # TD = [0]
 
     for tax in co2tax:
         for nr in TD:
@@ -39,7 +42,8 @@ if execute == 1:
             pyhub.read_data(casepath)
 
             if tax == 'high':
-                pyhub.data.time_series['clustered']['period1', 'Chemelot', 'CarbonCost', 'global', 'price'] = 250
+                if nr != 0:
+                    pyhub.data.time_series['clustered']['period1', 'Chemelot', 'CarbonCost', 'global', 'price'] = 250
                 pyhub.data.time_series['full']['period1', 'Chemelot', 'CarbonCost', 'global', 'price'] = 250
 
             #add casename based on resolution
