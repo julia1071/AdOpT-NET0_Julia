@@ -17,8 +17,8 @@ if execute == 1:
     resultpath = "Z:/PyHub/PyHub_results/CM/Cluster_integration/Chemelot_cluster"
     json_filepath = Path(casepath) / "ConfigModel.json"
 
-    # objectives = ['costs', 'emissions_minC']
-    objectives = ['emissions_minC']
+    objectives = ['costs', 'emissions_minC']
+    # objectives = ['emissions_minC']
 
     for obj in objectives:
         with open(json_filepath) as json_file:
@@ -120,7 +120,7 @@ if execute == 1:
 
 
 #Run Chemelot ethylene
-execute = 1
+execute = 0
 
 if execute == 1:
     # Specify the path to your input data
@@ -290,7 +290,7 @@ if execute == 1:
 
 
 #Run Zeeland ethylene
-execute = 1
+execute = 0
 
 if execute == 1:
     # Specify the path to your input data
