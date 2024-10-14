@@ -47,7 +47,7 @@ if execute == 1:
 
         # CO2 export
         dp.fill_carrier_data(casepath, value_or_data=115, columns=['Export limit'], carriers=['CO2'])
-    dp.fill_carrier_data(casepath, value_or_data=-63.78, columns=['Export price'], carriers=['CO2'])
+    dp.fill_carrier_data(casepath, value_or_data=-62.74, columns=['Export price'], carriers=['CO2'])
 
         # # Constant prices
         # dp.fill_carrier_data(casepath, value_or_data=100, columns=['Import price'], carriers=['methane'])
@@ -123,7 +123,7 @@ if execute == 1:
 
     # CO2 export
     dp.fill_carrier_data(casepath, value_or_data=115/2, columns=['Export limit'], carriers=['CO2'])
-    dp.fill_carrier_data(casepath, value_or_data=-63.78, columns=['Export price'], carriers=['CO2'])
+    dp.fill_carrier_data(casepath, value_or_data=-62.74, columns=['Export price'], carriers=['CO2'])
 
     # Constant prices
     dp.fill_carrier_data(casepath, value_or_data=100, columns=['Import price'], carriers=['methane'])
