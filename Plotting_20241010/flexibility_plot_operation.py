@@ -314,7 +314,7 @@ def main():
     custom_colors_operation = ['#422966', '#EEEEFF', '#EEBD6D', '#79AA74', '#28587B']
     custom_colors_import = ['#3F826D', '#E15F51', '#545E75', '#F2D0A4']
     overlay = "emission"
-    plot = "operation"
+    plot = "import"
 
     if plot == "operation":
         plot_operation_profiles(operation_profiles, el_price2, el_emissionrate, overlay=overlay, colors=custom_colors_operation)
@@ -323,13 +323,18 @@ def main():
 
     filename = plot + '_' + overlay
 
-    saveas = 'svg'
-    if saveas == 'svg':
-        savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/Paper/{filename}.svg'
+    saveas = '0'
+    if saveas == 'both':
+        savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/PaperFinal/{filename}.svg'
         plt.savefig(savepath, format='svg')
     elif saveas == 'pdf':
-        savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/Paper/{filename}.pdf'
+        savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/PaperFinal/{filename}.pdf'
         plt.savefig(savepath, format='pdf')
+    elif saveas == 'both':
+        savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/PaperFinal/{filename}.pdf'
+        plt.savefig(savepath, format='pdf')
+        savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/PaperFinal/{filename}.svg'
+        plt.savefig(savepath, format='svg')
 
     plt.show()
 
