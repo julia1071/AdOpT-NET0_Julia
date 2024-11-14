@@ -86,3 +86,13 @@ def get_nr_timesteps_averaged(config: dict) -> int:
         nr_timesteps_averaged = 1
 
     return nr_timesteps_averaged
+
+
+def fix_technology_sizes_zero(m, all_tecs, node, period):
+    for tec in all_tecs.keys():
+        if all_tecs[tec]:
+            m.model[m.info_solving_algorithms["aggregation_model"]].periods[period].node_blocks[node].tech_blocks_active[tec].var_size.fix(0)
+        else:
+            m.model[m.info_solving_algorithms["aggregation_model"]].periods[period].node_blocks[node].tech_blocks_active[tec].var_size.unfix()
+
+            
