@@ -122,7 +122,7 @@ execute = 1
 if execute == 1:
     # Specify the path to your input data
     casepath = "Z:/AdOpt_NET0/AdOpt_casestudies/MY/MY_Chemelot_gf_"
-    resultpath = "Z:/AdOpt_NET0/AdOpt_results/MY/EmissionLimit Greenfield/"
+    resultpath = "Z:/AdOpt_NET0/AdOpt_results/MY/EmissionLimit Greenfield Hull/"
     json_filepath = Path(casepath) / "ConfigModel.json"
 
     # select simulation types

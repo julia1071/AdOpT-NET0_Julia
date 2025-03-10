@@ -131,7 +131,7 @@ execute = 1
 if execute == 1:
     # Specify the base path to your input data
     casepath = "Z:/AdOpt_NET0/AdOpt_casestudies/MY/MY_Chemelot_bf_"
-    resultpath = "Z:/AdOpt_NET0/AdOpt_results/MY/EmissionLimit Brownfield/"
+    resultpath = "Z:/AdOpt_NET0/AdOpt_results/MY/EmissionLimit Brownfield Hull/"
 
 
     # select simulation types
