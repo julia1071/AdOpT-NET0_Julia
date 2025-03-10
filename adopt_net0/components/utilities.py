@@ -40,7 +40,7 @@ def set_discount_rate(config: dict, economics):
 
 
 def link_full_resolution_to_clustered(
-    var_clustered, var_full, set_t_full, sequence, *other_sets
+        var_clustered, var_full, set_t_full, sequence, *other_sets
 ):
     """
     Links two variables (clustered and full)
@@ -79,7 +79,7 @@ def link_full_resolution_to_clustered(
     return constraint
 
 
-def perform_disjunct_relaxation(model_block, method: str = "gdp.hull"):
+def perform_disjunct_relaxation(model_block, method: str = "gdp.bigm"):
     """
     Performs big-m transformation for respective component
 
@@ -93,11 +93,36 @@ def perform_disjunct_relaxation(model_block, method: str = "gdp.hull"):
     xfrm = pyo.TransformationFactory(method)
     xfrm.apply_to(model_block)
     log_msg = (
-        "\t\t\t"
-        + method
-        + " Transformation completed in "
-        + str(round(time.time() - start))
-        + " s"
+            "\t\t\t"
+            + method
+            + " Transformation completed in "
+            + str(round(time.time() - start))
+            + " s"
+    )
+
+    log.info(log_msg)
+    return model_block
+
+
+def perform_disjunct_relaxation_hull(model_block, method: str = "gdp.hull"):
+    """
+    Performs big-m transformation for respective component
+
+    :param component: pyomo component
+    :param str method: method to make transformation with.
+    :return: component
+    """
+    log_msg = "\t\t\t" + method + " Transformation..."
+    log.info(log_msg)
+    start = time.time()
+    xfrm = pyo.TransformationFactory(method)
+    xfrm.apply_to(model_block)
+    log_msg = (
+            "\t\t\t"
+            + method
+            + " Transformation completed in "
+            + str(round(time.time() - start))
+            + " s"
     )
 
     log.info(log_msg)
@@ -148,7 +173,7 @@ def determine_variable_scaling(model, model_block, f: dict, f_global):
             )
             if "capex" in var_name or "opex" in var_name:
                 global_scaling_factor = (
-                    global_scaling_factor * f_global["cost_vars"]["value"]
+                        global_scaling_factor * f_global["cost_vars"]["value"]
                 )
             model.scaling_factor[var] = global_scaling_factor
 
@@ -170,11 +195,11 @@ def determine_constraint_scaling(model, model_block, f: dict, f_global):
 
         # Determine global scaling factor
         global_scaling_factor = (
-            read_dict_value(f, const_name) * f_global["energy_vars"]["value"]
+                read_dict_value(f, const_name) * f_global["energy_vars"]["value"]
         )
         if "capex" in const_name or "opex" in const_name:
             global_scaling_factor = (
-                global_scaling_factor * f_global["cost_vars"]["value"]
+                    global_scaling_factor * f_global["cost_vars"]["value"]
             )
 
         if not const_name.endswith("xor"):
