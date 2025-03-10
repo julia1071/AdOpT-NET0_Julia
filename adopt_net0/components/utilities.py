@@ -79,7 +79,7 @@ def link_full_resolution_to_clustered(
     return constraint
 
 
-def perform_disjunct_relaxation(model_block, method: str = "gdp.bigm"):
+def perform_disjunct_relaxation(model_block, method: str = "gdp.hull"):
     """
     Performs big-m transformation for respective component
 
