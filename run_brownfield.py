@@ -4,7 +4,8 @@ import pandas as pd
 import adopt_net0.data_preprocessing as dp
 from adopt_net0.modelhub import ModelHub
 from adopt_net0.result_management.read_results import add_values_to_summary
-from adopt_net0.utilities import fix_installed_capacities, installed_capacities_existing
+from adopt_net0.utilities import fix_installed_capacities, installed_capacities_existing, \
+    installed_capacities_existing_from_file
 
 #Run Chemelot cluster case
 execute = 0
@@ -138,9 +139,14 @@ if execute == 1:
     node = 'Chemelot'
     scope3 = 1
     run_with_emission_limit = 1
-    intervals = ['2030', '2040', '2050']
+    intervals = ['2040', '2050']
+    # intervals = ['2030', '2040', '2050']
     interval_emissionLim = {'2030': 1, '2040': 0.5, '2050': 0}
     nr_DD_days = 10
+    take_prev_solution = 1
+    emission_2030 = 534720.5379
+    h5_path_prev = Path(
+        "Z:/AdOpt_NET0/AdOpt_results/MY/EmissionLimit Brownfield Hull/Chemelot/20250310185444_2030_minC_DD10-1/optimization_results.h5")
     pyhub = {}
 
     for i, interval in enumerate(intervals):
@@ -157,10 +163,14 @@ if execute == 1:
         else:
             prev_interval = intervals[i - 1]
             model_config['optimization']['objective']['value'] = "costs_emissionlimit"
-            if nr_DD_days > 0:
-                limit = interval_emissionLim[interval] * pyhub[prev_interval].model['clustered'].var_emissions_net.value
+            if interval == '2040' and take_prev_solution:
+                limit = interval_emissionLim[interval] * emission_2030
             else:
-                limit = interval_emissionLim[interval] * pyhub[prev_interval].model['full'].var_emissions_net.value
+                if nr_DD_days > 0:
+                    limit = interval_emissionLim[interval] * pyhub[prev_interval].model[
+                        'clustered'].var_emissions_net.value
+                else:
+                    limit = interval_emissionLim[interval] * pyhub[prev_interval].model['full'].var_emissions_net.value
             model_config['optimization']['emission_limit']['value'] = limit
 
         # Scope 3 analysis yes/no
@@ -169,7 +179,8 @@ if execute == 1:
         # solver settings
         model_config['solveroptions']['timelim']['value'] = 240
         model_config['solveroptions']['mipgap']['value'] = 0.01
-        model_config['solveroptions']['threads']['value'] = 24
+        model_config['solveroptions']['threads']['value'] = 8
+        model_config['solveroptions']['nodefilestart']['value'] = 200
 
         #change save options
         model_config['reporting']['save_summary_path']['value'] = resultpath + node
@@ -179,9 +190,14 @@ if execute == 1:
         with open(json_filepath, 'w') as json_file:
             json.dump(model_config, json_file, indent=4)
 
-        if i != 0:
-            prev_interval = intervals[i - 1]
-            installed_capacities_existing(pyhub, interval, prev_interval, node, casepath_interval)
+        # Installed capacities
+        if interval != '2030':
+            if take_prev_solution and interval == '2040':
+                if h5_path_prev.exists():
+                    installed_capacities_existing_from_file(interval, '2030', node, casepath_interval, h5_path_prev)
+            else:
+                prev_interval = intervals[i - 1]
+                installed_capacities_existing(pyhub, interval, prev_interval, node, casepath_interval)
 
         # Construct and solve the model
         pyhub[interval] = ModelHub()
