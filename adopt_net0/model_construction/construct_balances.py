@@ -103,7 +103,7 @@ def construct_network_constraints(model, config: dict):
     return model
 
 
-def construct_nodal_energybalance(model, config: dict):
+def construct_nodal_energybalance(model, config: dict, data):
     """
     Calculates the energy balance for each node and carrier
 
@@ -119,6 +119,7 @@ def construct_nodal_energybalance(model, config: dict):
 
     def init_energybalance(b_ebalance, period):
         b_period = model.periods[period]
+        fraction_of_year_modelled = data.topology["fraction_of_year_modelled"]
 
         set_t = get_set_t(config, b_period)
 
@@ -218,6 +219,47 @@ def construct_nodal_energybalance(model, config: dict):
             return export_CO2 <= captd_CO2 + syngas_CO2
 
         b_ebalance.const_CCS_export_limit = pyo.Constraint(rule=init_export_CCS_limit)
+
+        def init_demand_export_olefin(const):
+            ethylene = sum(
+                sum(sum(
+                    b_period.node_blocks[node]
+                    .tech_blocks_active[tec]
+                    .var_output_tot[t, 'ethylene']
+                    for tec in b_period.node_blocks[node].set_technologies
+                    if 'ethylene' in b_period.node_blocks[node].tech_blocks_active[tec].set_output_carriers_all
+                )
+                    for node in model.set_nodes
+                    ) for t in set_t)
+
+            propylene = sum(
+                sum(sum(
+                    b_period.node_blocks[node]
+                    .tech_blocks_active[tec]
+                    .var_output_tot[t, 'propylene']
+                    for tec in b_period.node_blocks[node].set_technologies
+                    if 'propylene' in b_period.node_blocks[node].tech_blocks_active[tec].set_output_carriers_all
+                )
+                    for node in model.set_nodes
+                    ) for t in set_t)
+
+            return propylene + ethylene == 1905300 * fraction_of_year_modelled
+
+        def init_demand_export_ammonia(const):
+            ammonia = sum(
+                sum(sum(
+                    b_period.node_blocks[node]
+                    .tech_blocks_active[tec]
+                    .var_output_tot[t, 'ammonia']
+                    for tec in b_period.node_blocks[node].set_technologies
+                    if 'ammonia' in b_period.node_blocks[node].tech_blocks_active[tec].set_output_carriers_all
+                )
+                    for node in model.set_nodes
+                    ) for t in set_t)
+            return ammonia == 1184000 * fraction_of_year_modelled
+
+        b_ebalance.const_demand_export_olefin = pyo.Constraint(rule=init_demand_export_olefin)
+        b_ebalance.const_demand_export_ammonia = pyo.Constraint(rule=init_demand_export_ammonia)
 
         return b_ebalance
 

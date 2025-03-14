@@ -8,23 +8,17 @@ from adopt_net0.result_management.read_results import add_values_to_summary
 import pandas as pd
 
 #global functions
-read_all = 0
+read_all = 1
 
 #Create data Chemelot cluster short term
 execute = 1
-linear = 0
 
 if execute == 1:
-    if linear:
-        # Specify the path to your input data
-        casepath = Path("Z:/AdOpt_NET0/AdOpt_casestudies/MY/MY_Chemelot_2030_linear")
-        datapath = Path("Z:/AdOpt_NET0/AdOpt_data/MY/291018_MY_Data_CH_2030_linear")
-    else:
-        # Specify the path to your input data
-        casepath = Path("Z:/AdOpt_NET0/AdOpt_casestudies/MY/MY_Chemelot_gf_2030")
-        datapath = Path("Z:/AdOpt_NET0/AdOpt_data/MY/250303_MY_Data_Chemelot")
+    # Specify the path to your input data
+    casepath = Path("Z:/AdOpt_NET0/AdOpt_casestudies/MY/Tests/MY_exportdemand/MY_Chemelot_gf_2030")
+    datapath = Path("Z:/AdOpt_NET0/AdOpt_data/MY/250303_MY_Data_Chemelot")
 
-    firsttime = 0
+    firsttime = 1
     if firsttime:
         # Create template files
         dp.create_optimization_templates(casepath)
@@ -38,7 +32,7 @@ if execute == 1:
             "nodes": ["Chemelot"],
             "carriers": ["electricity", "methane", "methane_bio", "naphtha", "naphtha_bio",
                          "CO2", "CO2_DAC", "CO2captured", "hydrogen", "nitrogen", "oxygen",
-                         "ammonia", "ethylene", "propylene", "PE_olefin", "olefins",
+                         "ammonia", "ethylene", "propylene", "olefins",
                          "crackergas", "feedgas", "steam", "heatlowT", "HBfeed", "syngas", "syngas_r",
                          "methanol", "ethanol", "propane", "MPW"],
             "investment_periods": ["2030"],
@@ -77,9 +71,8 @@ if execute == 1:
                         "CrackerFurnace", "CrackerFurnace_Electric", "OlefinSeparation",
                         "ASU", "Boiler_Industrial_NG", "Boiler_El",
                         "RWGS", "MeOHsynthesis", "MTO", "EDH", "PDH", "MPW2methanol",
-                        "Storage_Ammonia", "Storage_CO2", "Storage_Ethylene",
-                        "Storage_H2", "Storage_Battery", "Storage_Propylene",
-                        "CO2toEmission", "feedgas_mixer", "naphtha_mixer", "PE_mixer", "CO2_mixer", "HBfeed_mixer",
+                        "Storage_CO2", "Storage_H2", "Storage_Battery",
+                        "CO2toEmission", "feedgas_mixer", "naphtha_mixer", "CO2_mixer", "HBfeed_mixer",
                         "syngas_mixer"]
 
         json_file_path = casepath / "Topology.json"
@@ -115,9 +108,9 @@ if execute == 1:
         dp.fill_carrier_data(casepath, value_or_data=0)
 
         # Demand data
-        dp.fill_carrier_data(casepath, value_or_data=135, columns=['Demand'], carriers=['ammonia'])
+        # dp.fill_carrier_data(casepath, value_or_data=135, columns=['Demand'], carriers=['ammonia'])
         dp.fill_carrier_data(casepath, value_or_data=44, columns=['Demand'], carriers=['CO2'])
-        dp.fill_carrier_data(casepath, value_or_data=218, columns=['Demand'], carriers=['PE_olefin'])
+        # dp.fill_carrier_data(casepath, value_or_data=218, columns=['Demand'], carriers=['PE_olefin'])
         dp.fill_carrier_data(casepath, value_or_data=0, columns=['Demand'], carriers=['steam'])
         dp.fill_carrier_data(casepath, value_or_data=82, columns=['Demand'], carriers=['electricity'])
         dp.fill_carrier_data(casepath, value_or_data=7, columns=['Demand'], carriers=['feedgas'])
@@ -140,6 +133,10 @@ if execute == 1:
         # No export limit
         dp.fill_carrier_data(casepath, value_or_data=2000, columns=['Export limit'],
                              carriers=["nitrogen", "oxygen", "steam", "heatlowT", "crackergas"])
+
+        # Demand export limit
+        dp.fill_carrier_data(casepath, value_or_data=250, columns=['Export limit'],
+                             carriers=["ammonia", "ethylene", "propylene"])
 
         # CO2 export
         dp.fill_carrier_data(casepath, value_or_data= 114, columns=['Export limit'], carriers=['CO2'])
@@ -195,10 +192,10 @@ execute = 1
 
 if execute == 1:
     # Specify the path to your input data
-    casepath = Path("Z:/AdOpt_NET0/AdOpt_casestudies/MY/MY_Chemelot_gf_2040")
+    casepath = Path("Z:/AdOpt_NET0/AdOpt_casestudies/MY/Tests/MY_exportdemand/MY_Chemelot_gf_2040")
     datapath = Path("Z:/AdOpt_NET0/AdOpt_data/MY/250303_MY_Data_Chemelot")
 
-    firsttime = 0
+    firsttime = 1
     if firsttime:
         # Create template files
         dp.create_optimization_templates(casepath)
@@ -212,7 +209,7 @@ if execute == 1:
             "nodes": ["Chemelot"],
             "carriers": ["electricity", "methane", "methane_bio", "naphtha", "naphtha_bio",
                          "CO2", "CO2_DAC", "CO2captured", "hydrogen", "nitrogen", "oxygen",
-                         "ammonia", "ethylene", "propylene", "PE_olefin", "olefins",
+                         "ammonia", "ethylene", "propylene", "olefins",
                          "crackergas", "feedgas", "steam", "heatlowT", "HBfeed", "syngas", "syngas_r",
                          "methanol", "ethanol", "propane", "MPW"],
             "investment_periods": ["2040"],
@@ -252,9 +249,8 @@ if execute == 1:
                         "ASU", "Boiler_Industrial_NG", "Boiler_El",
                         "RWGS", "MeOHsynthesis", "MTO", "EDH", "PDH", "MPW2methanol",
                         "DirectMeOHsynthesis", "CO2electrolysis",
-                        "Storage_Ammonia", "Storage_CO2", "Storage_Ethylene",
-                        "Storage_H2", "Storage_Battery", "Storage_Propylene",
-                        "CO2toEmission", "feedgas_mixer", "naphtha_mixer", "PE_mixer", "CO2_mixer", "HBfeed_mixer",
+                        "Storage_CO2", "Storage_H2", "Storage_Battery",
+                        "CO2toEmission", "feedgas_mixer", "naphtha_mixer", "CO2_mixer", "HBfeed_mixer",
                         "syngas_mixer"]
 
         json_file_path = casepath / "Topology.json"
@@ -293,9 +289,9 @@ if execute == 1:
         dp.fill_carrier_data(casepath, value_or_data=0)
 
         # Demand data
-        dp.fill_carrier_data(casepath, value_or_data=135, columns=['Demand'], carriers=['ammonia'])
+        # dp.fill_carrier_data(casepath, value_or_data=135, columns=['Demand'], carriers=['ammonia'])
         dp.fill_carrier_data(casepath, value_or_data=44, columns=['Demand'], carriers=['CO2'])
-        dp.fill_carrier_data(casepath, value_or_data=218, columns=['Demand'], carriers=['PE_olefin'])
+        # dp.fill_carrier_data(casepath, value_or_data=218, columns=['Demand'], carriers=['PE_olefin'])
         dp.fill_carrier_data(casepath, value_or_data=0, columns=['Demand'], carriers=['steam'])
         dp.fill_carrier_data(casepath, value_or_data=82, columns=['Demand'], carriers=['electricity'])
         dp.fill_carrier_data(casepath, value_or_data=7, columns=['Demand'], carriers=['feedgas'])
@@ -324,6 +320,10 @@ if execute == 1:
         # No export limit
         dp.fill_carrier_data(casepath, value_or_data=2000, columns=['Export limit'],
                              carriers=["nitrogen", "oxygen", "steam", "heatlowT", "crackergas"])
+
+        # Demand export limit
+        dp.fill_carrier_data(casepath, value_or_data=250, columns=['Export limit'],
+                             carriers=["ammonia", "ethylene", "propylene"])
 
         # CO2 export
         dp.fill_carrier_data(casepath, value_or_data=114, columns=['Export limit'], carriers=['CO2'])
@@ -379,10 +379,10 @@ execute = 1
 
 if execute == 1:
     # Specify the path to your input data
-    casepath = Path("Z:/AdOpt_NET0/AdOpt_casestudies/MY/MY_Chemelot_gf_2050")
+    casepath = Path("Z:/AdOpt_NET0/AdOpt_casestudies/MY/Tests/MY_exportdemand/MY_Chemelot_gf_2050")
     datapath = Path("Z:/AdOpt_NET0/AdOpt_data/MY/250303_MY_Data_Chemelot")
 
-    firsttime = 0
+    firsttime = 1
     if firsttime:
         # Create template files
         dp.create_optimization_templates(casepath)
@@ -396,7 +396,7 @@ if execute == 1:
             "nodes": ["Chemelot"],
             "carriers": ["electricity", "methane", "methane_bio", "naphtha", "naphtha_bio",
                          "CO2", "CO2_DAC", "CO2captured", "hydrogen", "nitrogen", "oxygen",
-                         "ammonia", "ethylene", "propylene", "PE_olefin", "olefins",
+                         "ammonia", "ethylene", "propylene", "olefins",
                          "crackergas", "feedgas", "steam", "heatlowT", "HBfeed", "syngas", "syngas_r",
                          "methanol", "ethanol", "propane", "MPW"],
             "investment_periods": ["2050"],
@@ -436,9 +436,8 @@ if execute == 1:
                         "ASU", "Boiler_Industrial_NG", "Boiler_El",
                         "RWGS", "MeOHsynthesis", "MTO", "EDH", "PDH", "MPW2methanol",
                         "DirectMeOHsynthesis", "CO2electrolysis",
-                        "Storage_Ammonia", "Storage_CO2", "Storage_Ethylene",
-                        "Storage_H2", "Storage_Battery", "Storage_Propylene",
-                        "CO2toEmission", "feedgas_mixer", "naphtha_mixer", "PE_mixer", "CO2_mixer", "HBfeed_mixer",
+                        "Storage_CO2", "Storage_H2", "Storage_Battery",
+                        "CO2toEmission", "feedgas_mixer", "naphtha_mixer", "CO2_mixer", "HBfeed_mixer",
                         "syngas_mixer"]
 
         json_file_path = casepath / "Topology.json"
@@ -477,9 +476,9 @@ if execute == 1:
         dp.fill_carrier_data(casepath, value_or_data=0)
 
         # Demand data
-        dp.fill_carrier_data(casepath, value_or_data=135, columns=['Demand'], carriers=['ammonia'])
+        # dp.fill_carrier_data(casepath, value_or_data=135, columns=['Demand'], carriers=['ammonia'])
         dp.fill_carrier_data(casepath, value_or_data=44, columns=['Demand'], carriers=['CO2'])
-        dp.fill_carrier_data(casepath, value_or_data=218, columns=['Demand'], carriers=['PE_olefin'])
+        # dp.fill_carrier_data(casepath, value_or_data=218, columns=['Demand'], carriers=['PE_olefin'])
         dp.fill_carrier_data(casepath, value_or_data=0, columns=['Demand'], carriers=['steam'])
         dp.fill_carrier_data(casepath, value_or_data=82, columns=['Demand'], carriers=['electricity'])
         dp.fill_carrier_data(casepath, value_or_data=7, columns=['Demand'], carriers=['feedgas'])
@@ -509,6 +508,10 @@ if execute == 1:
         # No export limit
         dp.fill_carrier_data(casepath, value_or_data=2000, columns=['Export limit'],
                              carriers=["nitrogen", "oxygen", "steam", "heatlowT", "crackergas"])
+
+        # Demand export limit
+        dp.fill_carrier_data(casepath, value_or_data=250, columns=['Export limit'],
+                             carriers=["ammonia", "ethylene", "propylene"])
 
         # CO2 export
         dp.fill_carrier_data(casepath, value_or_data=148, columns=['Export limit'], carriers=['CO2'])

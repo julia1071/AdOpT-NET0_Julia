@@ -357,7 +357,7 @@ class ModelHub:
 
         if not config["energybalance"]["copperplate"]["value"]:
             model = construct_network_constraints(model, config)
-            model = construct_nodal_energybalance(model, config)
+            model = construct_nodal_energybalance(model, config, data)
         else:
             model = construct_global_energybalance(model, config)
 
