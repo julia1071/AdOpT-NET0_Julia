@@ -9,9 +9,9 @@ from adopt_net0.result_management.read_results import add_values_to_summary
 execute = 1
 
 if execute == 1:
-    # Specify the path to your input data
-    casepath = "Z:/AdOpt_NET0/AdOpt_casestudies/MY/MY_Chemelot_gf_"
-    resultpath = "Z:/AdOpt_NET0/AdOpt_results/MY/EmissionLimit Greenfield/"
+    # Specify the base path to your input data
+    casepath = "Z:/AdOpt_NET0/AdOpt_casestudies/MY/Tests/MY_exportdemand/MY_Chemelot_bf_"
+    resultpath = "Z:/AdOpt_NET0/AdOpt_results/MY/Emissionlimit Greenfield/Exportdemand/"
 
     # select simulation types
     node = 'Chemelot'
@@ -55,7 +55,7 @@ if execute == 1:
         model_config['solveroptions']['timelim']['value'] = 24*30
         model_config['solveroptions']['mipgap']['value'] = 0.02
         model_config['solveroptions']['threads']['value'] = 8
-        model_config['solveroptions']['nodefilestart']['value'] = 200
+        model_config['solveroptions']['nodefilestart']['value'] = 100
 
         #change save options
         model_config['reporting']['save_summary_path']['value'] = resultpath + node

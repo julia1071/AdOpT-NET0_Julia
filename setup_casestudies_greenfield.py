@@ -18,7 +18,7 @@ if execute == 1:
     casepath = Path("Z:/AdOpt_NET0/AdOpt_casestudies/MY/Tests/MY_exportdemand/MY_Chemelot_gf_2030")
     datapath = Path("Z:/AdOpt_NET0/AdOpt_data/MY/250303_MY_Data_Chemelot")
 
-    firsttime = 1
+    firsttime = 0
     if firsttime:
         # Create template files
         dp.create_optimization_templates(casepath)
@@ -211,7 +211,7 @@ if execute == 1:
     casepath = Path("Z:/AdOpt_NET0/AdOpt_casestudies/MY/Tests/MY_exportdemand/MY_Chemelot_gf_2040")
     datapath = Path("Z:/AdOpt_NET0/AdOpt_data/MY/250303_MY_Data_Chemelot")
 
-    firsttime = 1
+    firsttime = 0
     if firsttime:
         # Create template files
         dp.create_optimization_templates(casepath)
@@ -413,7 +413,7 @@ if execute == 1:
     casepath = Path("Z:/AdOpt_NET0/AdOpt_casestudies/MY/Tests/MY_exportdemand/MY_Chemelot_gf_2050")
     datapath = Path("Z:/AdOpt_NET0/AdOpt_data/MY/250303_MY_Data_Chemelot")
 
-    firsttime = 1
+    firsttime = 0
     if firsttime:
         # Create template files
         dp.create_optimization_templates(casepath)
