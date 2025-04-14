@@ -58,7 +58,7 @@ if execute == 1:
 
                 # solver settings
                 model_config['solveroptions']['timelim']['value'] = 48
-                model_config['solveroptions']['mipgap']['value'] = 0.01
+                model_config['solveroptions']['mipgap']['value'] = 0.02
                 model_config['solveroptions']['threads']['value'] = 10
 
                 # change save options
@@ -201,8 +201,8 @@ if execute == 1:
         model_config['optimization']['scope_three_analysis'] = scope3
 
         # solver settings
-        model_config['solveroptions']['timelim']['value'] = 240
-        model_config['solveroptions']['mipgap']['value'] = 0.01
+        model_config['solveroptions']['timelim']['value'] = 24*30
+        model_config['solveroptions']['mipgap']['value'] = 0.02
         model_config['solveroptions']['threads']['value'] = 8
 
         # change save options

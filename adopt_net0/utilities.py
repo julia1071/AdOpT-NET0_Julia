@@ -136,13 +136,28 @@ def installed_capacities_existing(m, scenario, prev_scenario, node, casepath):
 
     size_tecs_existing = {}
 
+    # Loop through all technologies
     for tec_name in b_node_prev.set_technologies:
-        prev_tec_size = b_node_prev.tech_blocks_active[tec_name].var_size.value
+        if tec_name.endswith("_existing"):
+            # Standalone existing technology (no new counterpart)
+            base_tec_name = tec_name.replace("_existing", "")
+            if base_tec_name not in b_node_prev.set_technologies:
+                prev_existing_size = b_node_prev.tech_blocks_active[tec_name].var_size.value or 0
+                if prev_existing_size > 0:
+                    size_tecs_existing[base_tec_name] = prev_existing_size
+            continue  # Skip processing it as a "new" technology
 
-        if prev_tec_size > 0:
-            if 'existing' in tec_name:
-                tec_name = tec_name[:-9]
-            size_tecs_existing[tec_name] = prev_tec_size
+        # New technology case
+        prev_tec_size = b_node_prev.tech_blocks_active[tec_name].var_size.value or 0
+
+        existing_tec_name = tec_name + "_existing"
+        prev_existing_size = 0
+
+        if existing_tec_name in b_node_prev.set_technologies:
+            prev_existing_size = b_node_prev.tech_blocks_active[existing_tec_name].var_size.value or 0
+
+        if prev_tec_size + prev_existing_size > 0:
+            size_tecs_existing[tec_name] = prev_tec_size + prev_existing_size
 
 
     # Read the JSON technology file

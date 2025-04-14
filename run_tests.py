@@ -20,8 +20,9 @@ if execute == 1:
     scope3 = 1
     run_with_emission_limit = 1
     intervals = ['2030', '2040', '2050']
+    # intervals = ['2040', '2050']
     interval_emissionLim = {'2030': 1, '2040': 0.5, '2050': 0}
-    nr_DD_days = 10
+    nr_DD_days = 1
     pyhub = {}
 
     for i, interval in enumerate(intervals):
@@ -48,10 +49,9 @@ if execute == 1:
         model_config['optimization']['scope_three_analysis'] = scope3
 
         # solver settings
-        model_config['solveroptions']['timelim']['value'] = 240
-        model_config['solveroptions']['mipgap']['value'] = 0.01
-        model_config['solveroptions']['threads']['value'] = 16
-        model_config['solveroptions']['nodefilestart']['value'] = 200
+        model_config['solveroptions']['timelim']['value'] = 24*30
+        model_config['solveroptions']['mipgap']['value'] = 0.02
+        model_config['solveroptions']['threads']['value'] = 10
 
         # change save options
         model_config['reporting']['save_summary_path']['value'] = resultpath + node
@@ -67,16 +67,21 @@ if execute == 1:
 
         # Construct and solve the model
         pyhub[interval] = ModelHub()
-        pyhub[interval].read_data(casepath_interval)
+        pyhub[interval].read_data(casepath_interval, start_period=0, end_period=24*2)
 
         # Set case name
         if nr_DD_days > 0:
             pyhub[interval].data.model_config['reporting']['case_name'][
                 'value'] = (interval + '_minC_' +
                             'DD' + str(pyhub[interval].data.model_config['optimization']['typicaldays']['N']['value']))
+
+            pyhub[interval].data.time_series['clustered'][
+                interval, node, 'CarbonCost', 'global', 'price'] = 150.31
         else:
             pyhub[interval].data.model_config['reporting']['case_name'][
                 'value'] = interval + '_minC_fullres'
+
+        pyhub[interval].data.time_series['full'][interval, node, 'CarbonCost', 'global', 'price'] = 150.31
 
         # Start brownfield optimization
         pyhub[interval].construct_model()
@@ -85,7 +90,7 @@ if execute == 1:
 
 
 #Run Chemelot cluster case greenfield
-execute = 1
+execute = 0
 
 
 if execute == 1:

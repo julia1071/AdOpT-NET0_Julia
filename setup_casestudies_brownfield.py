@@ -12,6 +12,7 @@ read_all = 1
 
 #Create data Chemelot cluster short term
 execute = 1
+noRR = 0
 
 if execute == 1:
     # Specify the path to your input data
@@ -104,7 +105,21 @@ if execute == 1:
                 if tec_json_file_path:
                     shutil.copy(tec_json_file_path, output_folder)
 
-    read_car = 1
+                spec_tec_size = {"AEC": 750, "RWGS": 123, "MeOHsynthesis": 494, "MTO": 904, "SteamReformer": 1269,
+                                 "ElectricSMR_m": 2114, "WGS_m": 389, "HaberBosch": 1609, "CrackerFurnace": 594,
+                                 "CrackerFurnace_Electric": 386, "OlefinSeparation": 594, "ASU": 112,
+                                 "Boiler_Industrial_NG": 2053, "Boiler_El": 750, "EDH": 526, "PDH": 157,
+                                 "MPW2methanol": 338}
+                for tec in spec_tec_size.keys():
+                    tech_data_file = find_json_path(output_folder, tec)
+                    with open(tech_data_file, "r") as json_tecdata_file:
+                        tech_data = json.load(json_tecdata_file)
+
+                    tech_data["size_max"] = spec_tec_size[tec]
+                    with open(tech_data_file, "w") as json_tecdata_file:
+                        json.dump(tech_data, json_tecdata_file, indent=4)
+
+    read_car = 0
     if read_car or read_all:
         # Fill carrier data
         dp.fill_carrier_data(casepath, value_or_data=0)
@@ -277,15 +292,30 @@ if execute == 1:
                 
                 # Add additional tecs
                 set_tecfiles = ["MEA_large", "SteamReformer", "CrackerFurnace", "OlefinSeparation"]
+                output_folder = (
+                        casepath / period / "node_data" / node_name / "technology_data"
+                )
                 for tec in set_tecfiles:
-                    output_folder = (
-                            casepath / period / "node_data" / node_name / "technology_data"
-                    )
-                    tec_json_file_path = find_json_path(datapath, tec)
-                    if tec_json_file_path:
-                        shutil.copy(tec_json_file_path, output_folder)
+                    other_tec_file_path = find_json_path(datapath, tec)
+                    if other_tec_file_path:
+                        shutil.copy(other_tec_file_path, output_folder)
 
-    read_car = 1
+                # specify tech size
+                spec_tec_size = {"AEC": 2000, "RWGS": 287, "MeOHsynthesis": 632, "MTO": 1287, "SteamReformer": 1269,
+                                 "ElectricSMR_m": 2114, "WGS_m": 389, "HaberBosch": 1609, "CrackerFurnace": 594,
+                                 "CrackerFurnace_Electric": 990, "OlefinSeparation": 990, "ASU": 112,
+                                 "Boiler_Industrial_NG": 2053, "Boiler_El": 2000, "EDH": 526, "PDH": 157,
+                                 "MPW2methanol": 381, "DirectMeOHsynthesis": 301, "CO2electrolysis": 174}
+                for tec in spec_tec_size.keys():
+                    tech_data_file = find_json_path(output_folder, tec)
+                    with open(tech_data_file, "r") as json_tecdata_file:
+                        tech_data = json.load(json_tecdata_file)
+
+                    tech_data["size_max"] = spec_tec_size[tec]
+                    with open(tech_data_file, "w") as json_tecdata_file:
+                        json.dump(tech_data, json_tecdata_file, indent=4)
+
+    read_car = 0
     if read_car or read_all:
         # Fill carrier data
         dp.fill_carrier_data(casepath, value_or_data=0)
@@ -311,8 +341,8 @@ if execute == 1:
         # dp.fill_carrier_data(casepath, value_or_data=2907, columns=['Import limit'], carriers=['CO2_DAC'])
         # dp.fill_carrier_data(casepath, value_or_data=559, columns=['Import limit'], carriers=['ethanol'])
         # dp.fill_carrier_data(casepath, value_or_data=173, columns=['Import limit'], carriers=['propane'])
-        # dp.fill_carrier_data(casepath, value_or_data=381, columns=['Import limit'], carriers=['MPW'])
-        dp.fill_carrier_data(casepath, value_or_data=338, columns=['Import limit'], carriers=['MPW'])
+        dp.fill_carrier_data(casepath, value_or_data=381, columns=['Import limit'], carriers=['MPW'])
+        # dp.fill_carrier_data(casepath, value_or_data=338, columns=['Import limit'], carriers=['MPW'])
 
         # Import for demand
         # dp.fill_carrier_data(casepath, value_or_data=26, columns=['Import limit'], carriers=['PE_olefin'])
@@ -469,15 +499,30 @@ if execute == 1:
 
                 # Add additional tecs
                 set_tecfiles = ["MEA_large", "SteamReformer", "CrackerFurnace", "OlefinSeparation"]
+                output_folder = (
+                        casepath / period / "node_data" / node_name / "technology_data"
+                )
                 for tec in set_tecfiles:
-                    output_folder = (
-                            casepath / period / "node_data" / node_name / "technology_data"
-                    )
-                    tec_json_file_path = find_json_path(datapath, tec)
-                    if tec_json_file_path:
-                        shutil.copy(tec_json_file_path, output_folder)
+                    other_tec_file_path = find_json_path(datapath, tec)
+                    if other_tec_file_path:
+                        shutil.copy(other_tec_file_path, output_folder)
 
-    read_car = 1
+                # specify tech size
+                spec_tec_size = {"AEC": 2500, "RWGS": 327, "MeOHsynthesis": 666, "MTO": 1408, "SteamReformer": 1269,
+                                 "ElectricSMR_m": 2114, "WGS_m": 389, "HaberBosch": 1609, "CrackerFurnace": 594,
+                                 "CrackerFurnace_Electric": 990, "OlefinSeparation": 990, "ASU": 112,
+                                 "Boiler_Industrial_NG": 2053, "Boiler_El": 2500, "EDH": 526, "PDH": 157,
+                                 "MPW2methanol": 424, "DirectMeOHsynthesis": 344, "CO2electrolysis": 218}
+                for tec in spec_tec_size.keys():
+                    tech_data_file = find_json_path(output_folder, tec)
+                    with open(tech_data_file, "r") as json_tecdata_file:
+                        tech_data = json.load(json_tecdata_file)
+
+                    tech_data["size_max"] = spec_tec_size[tec]
+                    with open(tech_data_file, "w") as json_tecdata_file:
+                        json.dump(tech_data, json_tecdata_file, indent=4)
+
+    read_car = 0
     if read_car or read_all:
         # Fill carrier data
         dp.fill_carrier_data(casepath, value_or_data=0)
@@ -503,8 +548,8 @@ if execute == 1:
         # dp.fill_carrier_data(casepath, value_or_data=3218, columns=['Import limit'], carriers=['CO2_DAC'])
         # dp.fill_carrier_data(casepath, value_or_data=619, columns=['Import limit'], carriers=['ethanol'])
         # dp.fill_carrier_data(casepath, value_or_data=192, columns=['Import limit'], carriers=['propane'])
-        # dp.fill_carrier_data(casepath, value_or_data=424, columns=['Import limit'], carriers=['MPW'])
-        dp.fill_carrier_data(casepath, value_or_data=338, columns=['Import limit'], carriers=['MPW'])
+        dp.fill_carrier_data(casepath, value_or_data=424, columns=['Import limit'], carriers=['MPW'])
+        # dp.fill_carrier_data(casepath, value_or_data=338, columns=['Import limit'], carriers=['MPW'])
 
         # Import for demand
         # dp.fill_carrier_data(casepath, value_or_data=26, columns=['Import limit'], carriers=['PE_olefin'])

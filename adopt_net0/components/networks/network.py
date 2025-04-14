@@ -53,7 +53,7 @@ class Network(ModelComponent):
       CAPEX calculation (annualized from given data on up-front CAPEX, lifetime and
       discount rate)
     - ``para_opex_variable``: Variable OPEX
-    - ``para_opex_fixed``: Fixed OPEX
+    - ``para_opex_fixed``: Fixed OPEX in % of up-front CAPEX
     - ``para_decommissioning_cost_annual``: decommissioning costs for existing networks
 
     **Variable declarations:**
@@ -97,7 +97,7 @@ class Network(ModelComponent):
 
         * CAPEX of respective arc. The CAPEX is calculated as follows (for new
           networks). Note that for existing networks, the CAPEX is zero, but the
-          fixed OPEX is calculated as a fraction of a hypothetical CAPEX
+          fixed OPEX is calculated as a fraction of a hypothetical up-front CAPEX
           based on the existing size.
 
           .. math::
@@ -648,7 +648,10 @@ class Network(ModelComponent):
 
         # CAPEX aux:
         if self.existing and self.component_options.decommission == "impossible":
-            b_arc.const_capex_aux = pyo.Constraint(rule=init_capex)
+            if b_arc.var_size.value == 0:
+                b_arc.const_capex_aux = pyo.Constraint(expr=b_arc.var_capex_aux == 0)
+            else:
+                b_arc.const_capex_aux = pyo.Constraint(rule=init_capex)
         elif (b_netw.para_capex_gamma1.value == 0) and (
             b_netw.para_capex_gamma3.value == 0
         ):
@@ -672,12 +675,13 @@ class Network(ModelComponent):
             b_arc.disjunction_installation = gdp.Disjunction(rule=bind_disjunctions)
 
         # CAPEX and CAPEX aux
-        if self.existing and not self.component_options.decommission == "impossible":
-            b_arc.const_capex = pyo.Constraint(
-                expr=b_arc.var_capex
-                == (b_netw.para_size_initial[node_from, node_to] - b_arc.var_size)
-                * b_netw.para_decommissioning_cost_annual
-            )
+        if self.existing:
+            if not self.component_options.decommission == "impossible":
+                b_arc.const_capex = pyo.Constraint(
+                    expr=b_arc.var_capex
+                    == (b_netw.para_size_initial[node_from, node_to] - b_arc.var_size)
+                    * b_netw.para_decommissioning_cost_annual
+                )
         else:
             b_arc.const_capex = pyo.Constraint(
                 expr=b_arc.var_capex == b_arc.var_capex_aux

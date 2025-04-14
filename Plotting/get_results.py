@@ -46,23 +46,41 @@ for result_type in result_types:
             continue
 
         tec_costs = {}
+        total_costs = {}
         for case in summary_results['case']:
             for i, interval in enumerate(result_data.columns.levels[2]):
                 if pd.notna(case) and interval in case:
                     h5_path = Path(summary_results.loc[summary_results['case'] == case, 'time_stamp'].iloc[
                                        0]) / "optimization_results.h5"
-                    result_data.loc["path", (result_type, location, interval)] = h5_path
+                    result_data.at["path", (result_type, location, interval)] = h5_path
                     result_data.loc["costs_interval", (result_type, location, interval)] = \
                         summary_results.loc[summary_results['case'] == case, 'total_npv'].iloc[0]
                     result_data.loc["emissions_tot", (result_type, location, interval)] = \
                         summary_results.loc[summary_results['case'] == case, 'emissions_pos'].iloc[0]
                     tec_costs[interval] = summary_results.loc[summary_results['case'] == case, 'cost_capex_tecs'].iloc[0]
+                    total_costs[interval] = summary_results.loc[summary_results['case'] == case, 'total_npv'].iloc[
+                        0]
 
+                    #Calculate sunk costs for brownfield
                     if 'Brownfield' in result_type and interval != '2030':
                         prev_interval = result_data.columns.levels[2][i - 1]
-                        result_data.loc["sunk_costs", (result_type, location, interval)] = tec_costs[prev_interval]
-                        result_data.loc["costs_tot", (result_type, location, interval)] = tec_costs[prev_interval] + \
-                            summary_results.loc[summary_results['case'] == case, 'total_npv'].iloc[0]
+                        if interval == '2040':
+                            result_data.loc["sunk_costs", (result_type, location, interval)] = tec_costs[prev_interval]
+                            result_data.loc["costs_tot_interval", (result_type, location, interval)] = tec_costs[prev_interval] + \
+                                summary_results.loc[summary_results['case'] == case, 'total_npv'].iloc[0]
+                        if interval == '2050':
+                            first_interval = result_data.columns.levels[2][i - 2]
+                            result_data.loc["sunk_costs", (result_type, location, interval)] = tec_costs[
+                                prev_interval] + tec_costs[first_interval]
+                            result_data.loc["costs_tot_interval", (result_type, location, interval)] = tec_costs[prev_interval] + \
+                                + tec_costs[first_interval] + summary_results.loc[summary_results['case'] == case, 'total_npv'].iloc[0]
+
+                    # Calculate total cumulative costs
+                    if 'Brownfield' in result_type:
+                        if interval == '2050':
+                            result_data.loc["costs_tot_cumulative", (result_type, location, interval)] = sum(total_costs.values()) * 10
+                    elif 'Greenfield' in result_type:
+                        result_data.loc["costs_tot_cumulative", (result_type, location, interval)] = total_costs[interval] * 30
 
                     if h5_path.exists():
                         with h5py.File(h5_path, "r") as hdf_file:

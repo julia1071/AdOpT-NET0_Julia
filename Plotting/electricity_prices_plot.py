@@ -28,12 +28,12 @@ for year in years:
         if node == 'Chemelot':
             data[node][year] = {
                 'price': el_importdata.iloc[:, 0],
-                'emission': el_importdata.iloc[:, 2]
+                'emission': el_importdata.iloc[:, 2] * 1000
             }
         elif node == 'Zeeland':
             data[node][year] = {
                 'price': el_importdata.iloc[:, 1],
-                'emission': el_importdata.iloc[:, 2]
+                'emission': el_importdata.iloc[:, 2] * 1000
             }
 
 # Configure Matplotlib to use LaTeX for text rendering and set font
@@ -60,34 +60,38 @@ custom_lines_emission = [Line2D([0], [0], color=colors_emission[i], linewidth=2)
 
 # Row 1: Price plot for Chemelot
 ax_price_chemelot = fig.add_subplot(gs[0, :])
+avg_prices_chemelot = {year: data['Chemelot'][year]['price'].mean() for year in years}
 for i, year in enumerate(years):
-    ax_price_chemelot.plot(data['Chemelot'][year]['price'], color=colors_chemelot[i], label=labels[year], linewidth=0.5)
+    ax_price_chemelot.plot(data['Chemelot'][year]['price'], color=colors_chemelot[i], label=f"{labels[year]} ({avg_prices_chemelot[year]:.1f} EUR/MWh)", linewidth=0.5)
 ax_price_chemelot.set_title('Electricity Prices Chemelot')
 ax_price_chemelot.set_ylabel('Electricity Price\n[EUR/MWh]')
 ax_price_chemelot.set_xlim(0, 8759)
 ax_price_chemelot.set_ylim(0, 200)
-ax_price_chemelot.legend(custom_lines_chemelot, [labels[year] for year in years], loc='upper right')
+ax_price_chemelot.legend(custom_lines_chemelot, [f"{labels[year]} ({avg_prices_chemelot[year]:.1f} EUR/MWh)" for year in years], loc='upper right')
 
 # Row 2: Price plot for Zeeland
 ax_price_zeeland = fig.add_subplot(gs[1, :])
+avg_prices_zeeland = {year: data['Zeeland'][year]['price'].mean() for year in years}
 for i, year in enumerate(years):
-    ax_price_zeeland.plot(data['Zeeland'][year]['price'], color=colors_zeeland[i], label=labels[year], linewidth=0.5)
+    ax_price_zeeland.plot(data['Zeeland'][year]['price'], color=colors_zeeland[i], label=f"{labels[year]} ({avg_prices_zeeland[year]:.1f} EUR/MWh)", linewidth=0.5)
 ax_price_zeeland.set_title('Electricity Prices: Zeeland')
 ax_price_zeeland.set_ylabel('Electricity Price\n[EUR/MWh]')
 ax_price_zeeland.set_xlim(0, 8759)
 ax_price_zeeland.set_ylim(0, 200)
-ax_price_zeeland.legend(custom_lines_zeeland, [labels[year] for year in years], loc='upper right')
+ax_price_zeeland.legend(custom_lines_zeeland, [f"{labels[year]} ({avg_prices_zeeland[year]:.1f} EUR/MWh)" for year in years], loc='upper right')
 
 # Row 3: Emission rate (common for both nodes)
 ax_emission = fig.add_subplot(gs[2, :])
+avg_emission = {year: data['Chemelot'][year]['emission'].mean() for year in years}
 for i, year in enumerate(years):
-    ax_emission.plot(data['Chemelot'][year]['emission'], color=colors_emission[i], linestyle='-', label=f'{labels[year]}', linewidth=0.5)
+    ax_emission.plot(data['Chemelot'][year]['emission'], color=colors_emission[i], linestyle='-', label=f"{labels[year]} ({avg_emission[year]:.0f} [kg CO$_2$/MWh])", linewidth=0.5)
 ax_emission.set_title('Emission Rates (Both Nodes)')
 ax_emission.set_xlabel('Time (hours)')
-ax_emission.set_ylabel('Emission Rate\n[t CO$_2$/MWh]')
+ax_emission.set_ylabel('Emission Rate\n[kg CO$_2$/MWh]')
 ax_emission.set_xlim(0, 8759)
-ax_emission.set_ylim(0, 0.3)
-ax_emission.legend(custom_lines_emission, [labels[year] for year in years], loc='upper right')
+# ax_emission.set_ylim(0, 0.3)
+ax_emission.set_ylim(0, 300)
+ax_emission.legend(custom_lines_emission, [f"{labels[year]} ({avg_emission[year]:.0f} [kg CO$_2$/MWh])" for year in years], loc='upper right')
 
 # Row 4a: ECDF for electricity prices (Chemelot + Zeeland)
 ax_hist_price = fig.add_subplot(gs[3, 0])
@@ -107,7 +111,7 @@ for i, year in enumerate(years):
     ecdf_emission = pd.Series(data[node][year]['emission']).value_counts(normalize=True).sort_index().cumsum()
     ax_hist_emission.plot(ecdf_emission.index, 1 - ecdf_emission.values, color=colors_emission[i], linestyle='--', label=f'{node} {labels[year]}', linewidth=0.8)
 ax_hist_emission.set_title('Emission Rates')
-ax_hist_emission.set_xlabel('Emission Rate [t CO$_2$/MWh]')
+ax_hist_emission.set_xlabel('Emission Rate [kg CO$_2$/MWh]')
 ax_hist_emission.set_ylabel('Probability')
 # ax_hist_emission.legend(loc='upper right')
 
