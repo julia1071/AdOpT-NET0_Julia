@@ -5,8 +5,9 @@ import adopt_net0.data_preprocessing as dp
 from adopt_net0.modelhub import ModelHub
 from adopt_net0.result_management.read_results import add_values_to_summary
 
+
 #Run Chemelot test design days greenfield
-execute = 1
+execute = 0
 
 if execute == 1:
     # Specify the path to your input data
@@ -74,7 +75,8 @@ if execute == 1:
     scope3 = 1
     interval = '2030'
     interval_emissionLim = {'2030': 1, '2040': 0.5, '2050': 0}
-    nr_DD_days = [5, 10, 20, 40, 100, 0]
+    nr_DD_days = [100, 0]
+    # nr_DD_days = [5, 10, 20, 40, 100, 0]
 
     for nr in nr_DD_days:
         with open(json_filepath) as json_file:

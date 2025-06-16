@@ -8,7 +8,7 @@ from adopt_net0.utilities import fix_installed_capacities, installed_capacities_
     installed_capacities_existing_from_file
 
 #Run Chemelot cluster case
-execute = 1
+execute = 0
 
 if execute == 1:
     # Specify the path to your input data
@@ -153,7 +153,7 @@ if execute == 1:
         # solver settings
         model_config['solveroptions']['timelim']['value'] = 24*30
         model_config['solveroptions']['mipgap']['value'] = 0.01
-        model_config['solveroptions']['threads']['value'] = 12
+        model_config['solveroptions']['threads']['value'] = 8
         model_config['solveroptions']['nodefilestart']['value'] = 200
 
         #change save options
