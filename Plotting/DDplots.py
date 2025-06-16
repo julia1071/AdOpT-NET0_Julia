@@ -161,7 +161,7 @@ savepath = 'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Research/
 plt.tight_layout()
 fig.subplots_adjust(left=0.15)
 
-# plt.savefig(f"{savepath}complexity_{run_for}_{plot_type}.pdf", format='pdf', bbox_inches='tight', pad_inches=0.05)
+plt.savefig(f"{savepath}complexity_{run_for}_{plot_type}.pdf", format='pdf', bbox_inches='tight', pad_inches=0.05)
 # plt.savefig(f"{savepath}complexity_{run_for}_{plot_type}.svg", format='svg', bbox_inches='tight', pad_inches=0.05)
 
 plt.show()
