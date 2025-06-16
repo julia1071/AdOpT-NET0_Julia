@@ -308,7 +308,7 @@ if execute:
     df_import_combined.to_excel(import_combined_excel_path, index=True, merge_cells=True)
 
 #latex tables sensitivity
-execute = 0
+execute = 1
 
 if execute:
     # Load the Excel file
@@ -607,9 +607,9 @@ if execute:
     import_combined = pd.concat([
         add_label_row(import_zeeland, "Zeeland"),
         pd.DataFrame([['\\midrule'] + [''] * (import_mpw.shape[1] - 1)], columns=import_mpw.columns),
-        add_label_row(import_mpw, "Direct Emissions from MPW Gasification"),
+        add_label_row(import_optbio, "Optimistic Bio-Feedstock Prices"),
         pd.DataFrame([['\\midrule'] + [''] * (import_mpw.shape[1] - 1)], columns=import_mpw.columns),
-        add_label_row(import_optbio, "Optimistic Bio-Feedstock Prices")
+        add_label_row(import_mpw, "Direct Emissions from MPW Gasification"),
     ], ignore_index=True)
 
 
@@ -635,7 +635,7 @@ if execute:
 
 
 # for zeeland case study
-execute = 1
+execute = 0
 
 if execute:
     # Load the Excel file
