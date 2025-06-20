@@ -86,8 +86,8 @@ plt.rcParams.update({
 
 # Define custom colors
 # colors = ['#9fa0c3', '#8b687f', '#7b435b', '#4C4D71', '#B096A7']
-colors = ['#639051', '#E4F0D0', '#5277B7', '#FFBC47']
-markers = ['o', '*', 'D', '^']
+colors = ['#639051', 'black', '#5277B7', '#FFBC47']
+markers = ['o', 'x', 'D', '^']
 
 # Choose the plot type: 'diff' for percentage differences, 'absolute' for absolute values
 plot_type = 'diff'  # Can be changed to 'diff' and 'absolute'
@@ -109,8 +109,13 @@ for i, column in enumerate(columns_of_interest):
             ax2.scatter(x_data, y_data, color=colors[i], marker=markers[i])
 
 # Set y-limits for broken axis
-ax1.set_ylim(-100, 500)      # Bottom axis
-ax2.set_ylim(2550, 2800)     # Top axis
+if run_for == 'bf':
+    ax1.set_ylim(-100, 200)      # Bottom axis
+    ax2.set_ylim(700, 1200)
+else:
+    ax1.set_ylim(-100, 500)  # Bottom axis
+    ax2.set_ylim(2500, 2800)
+
 
 # Hide tick labels on top x-axis
 plt.setp(ax2.get_xticklabels(), visible=False)
@@ -143,7 +148,7 @@ if plot_type == 'absolute':
     ax1.legend(handles1 + handles2, labels1 + labels2, loc='upper left')
 else:
     handles, labels = ax1.get_legend_handles_labels()
-    ax1.legend(handles, labels, loc='center right')
+    ax1.legend(handles, labels, loc='upper right')
 
 # Add grid to both subplots
 ax1.grid(True, alpha=0.2)
