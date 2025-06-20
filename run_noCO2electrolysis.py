@@ -21,13 +21,13 @@ if execute == 1:
     sensitivity = 'noCO2electrolysis'
     scope3 = 1
     run_with_emission_limit = 1
-    intervals = ['2030', '2040', '2050']
+    intervals = ['2040', '2050']
     interval_emissionLim = {'2030': 1, '2040': 0.5, '2050': 0}
     nr_DD_days = 10
-    prev_from_file = 0
-    emission_2030 = 522537.2155
+    prev_from_file = 1
+    emission_2030 = 524217.6955
     h5_path_prev = Path(
-        "Z:/AdOpt_NET0/AdOpt_results/MY/EmissionLimit Brownfield/Chemelot/20250416112938_2030_minC_DD10-1/optimization_results.h5")
+        "Z:/AdOpt_NET0/AdOpt_results/MY/EmissionLimit Brownfield/noCO2electrolysis/20250620103829_2030_minC_DD10-1/optimization_results.h5")
     pyhub = {}
 
     for i, interval in enumerate(intervals):
@@ -60,8 +60,8 @@ if execute == 1:
         # solver settings
         model_config['solveroptions']['timelim']['value'] = 24*30
         model_config['solveroptions']['mipgap']['value'] = 0.01
-        model_config['solveroptions']['threads']['value'] = 12
-        model_config['solveroptions']['nodefilestart']['value'] = 200
+        model_config['solveroptions']['threads']['value'] = 48
+        # model_config['solveroptions']['nodefilestart']['value'] = 200
 
         #change save options
         model_config['reporting']['save_summary_path']['value'] = resultpath + sensitivity
@@ -81,7 +81,7 @@ if execute == 1:
                 installed_capacities_existing(pyhub, interval, prev_interval, 'Chemelot', casepath_interval)
 
             # change technology set (remove CO2 electrolysis)
-            json_tec_file_path = Path(casepath_interval) / "node_data" / "Chemelot" / "Technologies.json"
+            json_tec_file_path = Path(casepath_interval) / interval / "node_data" / "Chemelot" / "Technologies.json"
             set_tecs = ["ElectricSMR_m", "WGS_m", "AEC", "HaberBosch",
                         "CrackerFurnace_Electric",
                         "ASU", "Boiler_Industrial_NG", "Boiler_El",
@@ -122,23 +122,24 @@ if execute == 1:
         pyhub[interval].solve()
 
         # change back technology set (add CO2 electrolysis)
-        json_tec_file_path = Path(casepath_interval) / "node_data" / "Chemelot" / "Technologies.json"
-        set_tecs = ["ElectricSMR_m", "WGS_m", "AEC", "HaberBosch",
-                    "CrackerFurnace_Electric",
-                    "ASU", "Boiler_Industrial_NG", "Boiler_El",
-                    "RWGS", "MeOHsynthesis", "MTO", "EDH", "PDH", "MPW2methanol",
-                    "DirectMeOHsynthesis", "CO2electrolysis",
-                    "Storage_Ammonia", "Storage_CO2", "Storage_Ethylene",
-                    "Storage_H2", "Storage_Battery", "Storage_Propylene",
-                    "CO2toEmission", "feedgas_mixer", "naphtha_mixer", "PE_mixer", "CO2_mixer", "HBfeed_mixer",
-                    "syngas_mixer"]
+        if interval != '2030':
+            json_tec_file_path = Path(casepath_interval) / interval / "node_data" / "Chemelot" / "Technologies.json"
+            set_tecs = ["ElectricSMR_m", "WGS_m", "AEC", "HaberBosch",
+                        "CrackerFurnace_Electric",
+                        "ASU", "Boiler_Industrial_NG", "Boiler_El",
+                        "RWGS", "MeOHsynthesis", "MTO", "EDH", "PDH", "MPW2methanol",
+                        "DirectMeOHsynthesis", "CO2electrolysis",
+                        "Storage_Ammonia", "Storage_CO2", "Storage_Ethylene",
+                        "Storage_H2", "Storage_Battery", "Storage_Propylene",
+                        "CO2toEmission", "feedgas_mixer", "naphtha_mixer", "PE_mixer", "CO2_mixer", "HBfeed_mixer",
+                        "syngas_mixer"]
 
-        with open(json_tec_file_path, "r") as json_tec_file:
-            json_tec = json.load(json_tec_file)
+            with open(json_tec_file_path, "r") as json_tec_file:
+                json_tec = json.load(json_tec_file)
 
-        json_tec['new'] = set_tecs
-        with open(json_tec_file_path, "w") as json_tec_file:
-            json.dump(json_tec, json_tec_file, indent=4)
+            json_tec['new'] = set_tecs
+            with open(json_tec_file_path, "w") as json_tec_file:
+                json.dump(json_tec, json_tec_file, indent=4)
 
 
 
@@ -158,7 +159,7 @@ if execute == 1:
     interval_emissionLim = {'2030': 1, '2040': 0.5, '2050': 0}
     nr_DD_days = 10
     take_prev_solution = 0
-    prev_emission = 522537.2155
+    prev_emission = 524217.6955
     pyhub = {}
 
     for i, interval in enumerate(intervals):
@@ -175,7 +176,7 @@ if execute == 1:
         else:
             prev_interval = intervals[i - 1]
             model_config['optimization']['objective']['value'] = "costs_emissionlimit"
-            if interval == '2040' and take_prev_solution:
+            if interval == '2040':
                 limit = interval_emissionLim[interval] * prev_emission
             else:
                 if nr_DD_days > 0:
@@ -185,7 +186,7 @@ if execute == 1:
             model_config['optimization']['emission_limit']['value'] = limit
 
             # change technology set (remove CO2 electrolysis)
-            json_tec_file_path = Path(casepath_interval) / "node_data" / "Chemelot" / "Technologies.json"
+            json_tec_file_path = Path(casepath_interval) / interval / "node_data" / "Chemelot" / "Technologies.json"
             set_tecs = ["ElectricSMR_m", "WGS_m", "AEC", "HaberBosch",
                         "CrackerFurnace_Electric",
                         "ASU", "Boiler_Industrial_NG", "Boiler_El",
@@ -209,8 +210,8 @@ if execute == 1:
         # solver settings
         model_config['solveroptions']['timelim']['value'] = 24*30
         model_config['solveroptions']['mipgap']['value'] = 0.01
-        model_config['solveroptions']['threads']['value'] = 12
-        model_config['solveroptions']['nodefilestart']['value'] = 200
+        model_config['solveroptions']['threads']['value'] = 48
+        # model_config['solveroptions']['nodefilestart']['value'] = 200
 
         #change save options
         model_config['reporting']['save_summary_path']['value'] = resultpath + sensitivity
@@ -243,20 +244,21 @@ if execute == 1:
         pyhub[interval].solve()
 
         # change back technology set (add CO2 electrolysis)
-        json_tec_file_path = Path(casepath_interval) / "node_data" / "Chemelot" / "Technologies.json"
-        set_tecs = ["ElectricSMR_m", "WGS_m", "AEC", "HaberBosch",
-                    "CrackerFurnace_Electric",
-                    "ASU", "Boiler_Industrial_NG", "Boiler_El",
-                    "RWGS", "MeOHsynthesis", "MTO", "EDH", "PDH", "MPW2methanol",
-                    "DirectMeOHsynthesis", "CO2electrolysis",
-                    "Storage_Ammonia", "Storage_CO2", "Storage_Ethylene",
-                    "Storage_H2", "Storage_Battery", "Storage_Propylene",
-                    "CO2toEmission", "feedgas_mixer", "naphtha_mixer", "PE_mixer", "CO2_mixer", "HBfeed_mixer",
-                    "syngas_mixer"]
+        if interval != '2030':
+            json_tec_file_path = Path(casepath_interval) / interval / "node_data" / "Chemelot" / "Technologies.json"
+            set_tecs = ["ElectricSMR_m", "WGS_m", "AEC", "HaberBosch",
+                        "CrackerFurnace_Electric",
+                        "ASU", "Boiler_Industrial_NG", "Boiler_El",
+                        "RWGS", "MeOHsynthesis", "MTO", "EDH", "PDH", "MPW2methanol",
+                        "DirectMeOHsynthesis", "CO2electrolysis",
+                        "Storage_Ammonia", "Storage_CO2", "Storage_Ethylene",
+                        "Storage_H2", "Storage_Battery", "Storage_Propylene",
+                        "CO2toEmission", "feedgas_mixer", "naphtha_mixer", "PE_mixer", "CO2_mixer", "HBfeed_mixer",
+                        "syngas_mixer"]
 
-        with open(json_tec_file_path, "r") as json_tec_file:
-            json_tec = json.load(json_tec_file)
+            with open(json_tec_file_path, "r") as json_tec_file:
+                json_tec = json.load(json_tec_file)
 
-        json_tec['new'] = set_tecs
-        with open(json_tec_file_path, "w") as json_tec_file:
-            json.dump(json_tec, json_tec_file, indent=4)
+            json_tec['new'] = set_tecs
+            with open(json_tec_file_path, "w") as json_tec_file:
+                json.dump(json_tec, json_tec_file, indent=4)
