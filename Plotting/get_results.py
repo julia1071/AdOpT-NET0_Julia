@@ -38,7 +38,7 @@ for result_type in result_types:
         columns = pd.MultiIndex.from_product(
             [
                 [str(result_type)],
-                ["MPWemission", "OptBIO", "TightEmission"],
+                ["MPWemission", "OptBIO", "noCO2electrolysis", "TightEmission"],
                 ["2030", "2040", "2050"]
             ],
             names=["Resulttype", "Location", "Interval"]

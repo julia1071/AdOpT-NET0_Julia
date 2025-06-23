@@ -57,7 +57,7 @@ def fetch_and_process_data_production(resultfolder, data_to_excel_path_olefins, 
                                 hdf_file["operation/technology_operation"])
                             tec_operation = {k: v for k, v in tec_operation.items() if len(v) >= 8670}
                             df_tec_operation = pd.DataFrame(tec_operation)
-                            if sensitivity in ["MPWemission", "OptBIO"]:
+                            if sensitivity in ["MPWemission", "OptBIO", "noCO2electrolysis"]:
                                 sensitivity_data = "Chemelot"
                             else:
                                 sensitivity_data = sensitivity
@@ -312,7 +312,7 @@ def plot_production_shares_stacked(df1, df2, categories, interpolation="spline",
 
 def main():
     result_type = 'EmissionLimit Brownfield'
-    set_sensitivities = ['Chemelot', 'Zeeland', 'MPWemission', 'OptBIO']
+    set_sensitivities = ['Chemelot', 'Zeeland', 'MPWemission', 'OptBIO', 'noCO2electrolysis']
     # result_type = 'EmissionScope Brownfield'
     # set_sensitivities = ['Chemelot']
 

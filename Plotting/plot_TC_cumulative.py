@@ -9,15 +9,15 @@ from openpyxl.reader.excel import load_workbook
 metric = "costs"       # Choose: "costs" or "emissions"
 scale_type = "per_tonne"   # Choose: "total" or "per_tonne"
 saveas = 'pdf'  # Options: "no", "svg", "pdf", "both"
-filename = 'TC_baseline_' + metric + '_' + scale_type
+filename = 'TC_baseline_' + metric + '_' + scale_type + '_noCO2'
 delayed = 0
-sensitivity = 0
+sensitivity = 1
 stacked = 0
 
 node = "Zeeland"
 if node == "Chemelot":
     if sensitivity:
-        file_path = "C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long_MPW.xlsx"
+        file_path = "C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long_noCO2.xlsx"
     else:
         file_path = "C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long.xlsx"
     if delayed:
