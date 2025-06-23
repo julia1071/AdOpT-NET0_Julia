@@ -114,7 +114,7 @@ if run_for == 'bf':
     ax2.set_ylim(700, 1200)
 else:
     ax1.set_ylim(-100, 500)  # Bottom axis
-    ax2.set_ylim(2500, 2800)
+    ax2.set_ylim(2550, 2800)
 
 
 # Hide tick labels on top x-axis
