@@ -161,7 +161,7 @@ fig.text(0.015, 0.5, 'Difference with 10 Design Days (\%)', va='center', rotatio
 
 
 # # Save and show plot
-savepath = 'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/'
+savepath = 'C:/Users/5637635/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/'
 
 plt.tight_layout()
 fig.subplots_adjust(left=0.15)

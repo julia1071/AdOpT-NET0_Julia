@@ -8,7 +8,7 @@ from cmcrameri import cm
 
 # Define the data path
 datapath = "Z:/AdOpt_NET0/AdOpt_data/MY/241119_MY_Data_Chemelot"
-savepath = 'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/'
+savepath = 'C:/Users/5637635/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/'
 el_load_path = Path(datapath) / 'import_data' / 'Electricity_data_MY.xlsx'
 save = 1
 
@@ -127,7 +127,7 @@ ax_emiss.set_ylim(0, 300)
 ax_emiss.legend(loc='upper left')
 
 # Save or show
-# savepath = 'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/'
+# savepath = 'C:/Users/5637635/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/'
 if save:
     fig2.savefig(f"{savepath}eprice_cumulative_dist.pdf", format='pdf')
 plt.show()
@@ -201,6 +201,6 @@ plt.show()
 # # ax_hist_emission.legend(loc='upper right')
 #
 # # Save and show plot
-# savepath = 'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/'
+# savepath = 'C:/Users/5637635/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/'
 # plt.savefig(f"{savepath}eprice_combined.pdf", format='pdf')
 # plt.show()

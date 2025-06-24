@@ -12,11 +12,11 @@ from adopt_net0 import extract_datasets_from_h5group
 # Define the data paths
 # RESULT_FOLDER = "Z:/AdOpt_NET0/AdOpt_results/MY/EmissionScope Brownfield/"
 RESULT_FOLDER = "Z:/AdOpt_NET0/AdOpt_results/MY/EmissionLimit Brownfield/"
-# DATA_TO_EXCEL_PATH1 = 'C:/EHubversions/AdOpT-NET0_Julia//Plotting/production_shares_olefins_scope.xlsx'
-# DATA_TO_EXCEL_PATH2 = 'C:/EHubversions/AdOpT-NET0_Julia//Plotting/production_shares_ammonia_scope.xlsx'
-DATA_TO_EXCEL_PATH1 = 'C:/EHubversions/AdOpT-NET0_Julia//Plotting/production_shares_olefins.xlsx'
-DATA_TO_EXCEL_PATH2 = 'C:/EHubversions/AdOpT-NET0_Julia//Plotting/production_shares_ammonia.xlsx'
-DATAPATH = "C:/EHubversions/AdOpT-NET0_Julia/Plotting"
+# DATA_TO_EXCEL_PATH1 = 'C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia//Plotting/production_shares_olefins_scope.xlsx'
+# DATA_TO_EXCEL_PATH2 = 'C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia//Plotting/production_shares_ammonia_scope.xlsx'
+DATA_TO_EXCEL_PATH1 = 'C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia//Plotting/production_shares_olefins.xlsx'
+DATA_TO_EXCEL_PATH2 = 'C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia//Plotting/production_shares_ammonia.xlsx'
+DATAPATH = "C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia/Plotting"
 
 
 def fetch_and_process_data_production(resultfolder, data_to_excel_path_olefins, data_to_excel_path_ammonia,
@@ -258,7 +258,7 @@ def plot_production_shares_stacked(df1, df2, categories, interpolation="spline",
         return x, interpolated
 
     if separate == 1:
-        fig, (ax1, ax2) = plt.subplots(nrows=2, figsize=(7, 6.5), sharex=True,
+        fig, (ax1, ax2) = plt.subplots(nrows=2, figsize=(7, 5.5), sharex=True,
                                        gridspec_kw={'hspace': 0.1}
                                        )
 
@@ -278,12 +278,12 @@ def plot_production_shares_stacked(df1, df2, categories, interpolation="spline",
         ax2.set_xlim(x.min(), x.max())
 
         # Combine legend from both axes
-        handles, labels = ax2.get_legend_handles_labels()
-        fig.legend(handles, labels,
-                   loc='lower center',
-                   bbox_to_anchor=(0.5, 0),
-                   ncol=2)
-        plt.subplots_adjust(bottom=0.25)
+        # handles, labels = ax2.get_legend_handles_labels()
+        # fig.legend(handles, labels,
+        #            loc='lower center',
+        #            bbox_to_anchor=(0.5, 0),
+        #            ncol=2)
+        # plt.subplots_adjust(bottom=0.25)
 
     else:
         # Merge and plot together
@@ -310,9 +310,32 @@ def plot_production_shares_stacked(df1, df2, categories, interpolation="spline",
     plt.tight_layout()
 
 
+def save_separate_legend(categories, filename="legend.pdf"):
+    import matplotlib.patches as mpatches
+
+    plt.rcParams.update({'font.family': 'serif', 'font.size': 12})
+    fig, ax = plt.subplots(figsize=(6.5, 0.6))  # Adjust width/height as needed
+
+    # Create dummy handles
+    handles = [mpatches.Patch(color=color, label=label)
+               for label, color in categories.items()]
+
+    # Add the legend to the figure
+    legend = fig.legend(handles, categories.keys(),
+                        loc='center',
+                        ncol=4,  # adjust based on layout needs
+                        frameon=False)
+
+    ax.axis('off')  # Hide axes completely
+
+    plt.tight_layout()
+    fig.savefig(f'C:/Users/5637635/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/{filename}', format='pdf', bbox_inches='tight')
+    plt.close(fig)
+
+
 def main():
     result_type = 'EmissionLimit Brownfield'
-    set_sensitivities = ['Chemelot', 'Zeeland', 'MPWemission', 'OptBIO', 'noCO2electrolysis']
+    set_sensitivities = ['Chemelot', 'Zeeland', 'noCO2electrolysis', 'MPWemission', 'OptBIO']
     # result_type = 'EmissionScope Brownfield'
     # set_sensitivities = ['Chemelot']
 
@@ -371,29 +394,32 @@ def main():
                                            separate=separate)
 
         #Make the plots
-        if 'Emissionlimit' in result_type:
+        if 'EmissionLimit' in result_type:
             ext_map = {'Brownfield': '_bf', 'Greenfield': '_gf'}
             ext = next((v for k, v in ext_map.items() if k in result_type), '')
         else:
-            ext = '_bf'
+            ext = '_bf_scope'
 
         filename = f'production_share_{sensitivity}{ext}'
 
 
         saveas = 'pdf'
         if saveas == 'svg':
-            savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/{filename}.svg'
+            savepath = f'C:/Users/5637635/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/{filename}.svg'
             plt.savefig(savepath, format='svg')
         elif saveas == 'pdf':
-            savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/{filename}.pdf'
-            plt.savefig(savepath, format='pdf')
+            savepath = f'C:/Users/5637635/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/{filename}.pdf'
+            plt.savefig(savepath, format='pdf', bbox_inches='tight')
         elif saveas == 'both':
-            savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/{filename}.pdf'
+            savepath = f'C:/Users/5637635/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/{filename}.pdf'
             plt.savefig(savepath, format='pdf')
-            savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/{filename}.svg'
-            plt.savefig(savepath, format='svg')
+            savepath = f'C:/Users/5637635/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots/{filename}.svg'
+            plt.savefig(savepath, format='svg', bbox_inches='tight')
 
         plt.show()
+
+        # After all plots:
+        # save_separate_legend(categories)
 
 
 if __name__ == "__main__":

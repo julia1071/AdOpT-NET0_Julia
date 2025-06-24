@@ -13,16 +13,16 @@ zeeland = 0
 delayed = 0
 
 if sensitivity:
-    data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long_sensitivity.xlsx'
+    data_to_excel_path = 'C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia/Plotting/result_data_long_sensitivity.xlsx'
     result_types = ['EmissionLimit Greenfield', 'EmissionLimit Brownfield'] # Add multiple result types
 elif zeeland:
-    data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long_Zeeland.xlsx'
+    data_to_excel_path = 'C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia/Plotting/result_data_long_Zeeland.xlsx'
     result_types = ['EmissionLimit Greenfield', 'EmissionLimit Brownfield']  # Add multiple result types
 elif delayed:
-    data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long_delayed.xlsx'
+    data_to_excel_path = 'C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia/Plotting/result_data_long_delayed.xlsx'
     result_types = ['EmissionLimit Brownfield']  # Add multiple result types
 else:
-    data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long.xlsx'
+    data_to_excel_path = 'C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia/Plotting/result_data_long.xlsx'
     result_types = ['EmissionLimit Greenfield', 'EmissionLimit Brownfield', 'EmissionScope Greenfield',
                     'EmissionScope Brownfield']
 

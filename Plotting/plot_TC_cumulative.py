@@ -14,16 +14,16 @@ delayed = 0
 sensitivity = 1
 stacked = 0
 
-node = "Zeeland"
+node = "Chemelot"
 if node == "Chemelot":
     if sensitivity:
-        file_path = "C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long_noCO2.xlsx"
+        file_path = "C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia/Plotting/result_data_long_noCO2.xlsx"
     else:
-        file_path = "C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long.xlsx"
+        file_path = "C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia/Plotting/result_data_long.xlsx"
     if delayed:
-        file_path_delayed = "C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long_delayed.xlsx"
+        file_path_delayed = "C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia/Plotting/result_data_long_delayed.xlsx"
 else:
-    file_path = "C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data_long_Zeeland.xlsx"
+    file_path = "C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia/Plotting/result_data_long_Zeeland.xlsx"
 
 # Set font to Open Sans
 # font_path = 'C:/Windows/Fonts/OpenSans-Regular.ttf'  # Make sure this path is correct
@@ -187,9 +187,9 @@ if stacked:
 else:
     # --- Plotting ---
     if node == "Chemelot" and not sensitivity:
-        fig, ax = plt.subplots(figsize=(10, 3))
+        fig, ax = plt.subplots(figsize=(10, 3.5))
     else:
-        fig, ax = plt.subplots(figsize=(5, 3))
+        fig, ax = plt.subplots(figsize=(5, 3.5))
 
     years = ['2030', '2040', '2050']
     n_years = len(years)
@@ -201,8 +201,9 @@ else:
     x_brownfield = np.arange(n_years) * group_width + bar_width / 2
 
     # Colors
-    greenfield_color = "#7F9183"
-    brownfield_color = "#765B56"
+    # greenfield_color = "#7F9183"
+    greenfield_color = "#87bd73"
+    brownfield_color = "#4d3c30"
 
     # --- EmissionLimit bars ---
     ax.bar(x_greenfield[0], gf_limit_vals[0], width=bar_width, color=greenfield_color, label='Greenfield')
@@ -216,7 +217,7 @@ else:
 
     # --- EmissionScope bars ---
     if node == "Chemelot" and not sensitivity:
-        offset = group_width * (n_years) + 1  # space between Limit and Scope
+        offset = group_width * (n_years) + 1.5 # space between Limit and Scope
 
         ax.bar(x_greenfield[0] + offset, gf_scope_vals[0], width=bar_width, color=greenfield_color)
         ax.bar(x_brownfield[0] + offset, bf_scope_vals[0], width=bar_width, color=brownfield_color)
@@ -246,12 +247,13 @@ else:
     # Horizontal price line (only for costs)
     if metric == "costs":
         if node == "Chemelot" and not sensitivity:
-            price_line = ax.axhline(y=880, color='grey', linestyle='--', linewidth=1)
+            price_line = ax.axhline(y=880, color='#4c4d4c', linestyle='--', linewidth=1)
         else:
-            price_line = ax.axhline(y=868, color='grey', linestyle='--', linewidth=1)
+            price_line = ax.axhline(y=868, color='#4c4d4c', linestyle='--', linewidth=1)
 
     # Y-axis label
     ax.set_ylabel(f"{ylabel_base} [{unit}]")
+    # ax.set_ylim(0, 1900)
 
     # Section labels
     if node == "Chemelot" and not sensitivity:
@@ -267,14 +269,14 @@ else:
     ]
 
     if metric == "costs":
-        if node == "Chemelot" and not sensitivity:
-            custom_legend.append(
-                plt.Line2D([0], [0], color='grey', linestyle='--', linewidth=1, label='Weighted average\nproduct price 2024')
-            )
-    if node == "Chemelot" and not sensitivity:
-        ax.legend(handles=custom_legend, loc='upper center')
-    else:
-        ax.legend(handles=custom_legend, loc='upper right')
+        custom_legend.append(
+            plt.Line2D([0], [0], color='#4c4d4c', linestyle='--', linewidth=1, label='Weighted average\nproduct '
+                                                                                  'price 2024')
+        )
+    # if node == "Chemelot" and not sensitivity:
+    #     ax.legend(handles=custom_legend, loc='upper center')
+    # else:
+    #     ax.legend(handles=custom_legend, loc='upper right')
 
 #Print costs and difference
 print(bf_limit_vals)
@@ -297,7 +299,7 @@ if node == "Chemelot" and not sensitivity:
 if node == "Zeeland":
     filename = filename + "_" + node
 if saveas in ['svg', 'pdf', 'both']:
-    basepath = 'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots'
+    basepath = 'C:/Users/5637635/OneDrive - Universiteit Utrecht/Research/Multiyear Modeling/MY_Plots'
     if saveas in ['pdf', 'both']:
         plt.savefig(os.path.join(basepath, f"{filename}.pdf"), format='pdf')
     if saveas in ['svg', 'both']:
