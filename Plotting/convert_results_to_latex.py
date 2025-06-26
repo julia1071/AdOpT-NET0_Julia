@@ -320,7 +320,8 @@ if execute:
     top_header = top_header.replace({"EmissionLimit Greenfield": "Greenfield (Scope 1, 2, and 3)",
                                      "EmissionLimit Brownfield": "Brownfield (Scope 1, 2, and 3)"})
     mid_header = df.iloc[1].ffill()  # Forward fill merged cells
-    mid_header = mid_header.replace({"MPWemission": "Direct Emissions from MPW Gasification",
+    mid_header = mid_header.replace({"noCO2electrolysis": "No \ce{CO2} electrolyzers",
+                                     "MPWemission": "Direct Emissions from MPW Gasification",
                                      "OptBIO": "Optimistic Bio-Feedstock Prices",
                                      "TightEmission": "Tighter Short-Term Emission Limit"})
     sub_header = df.iloc[2].replace({"2030": "Short-term", "2040": "Mid-term", "2050": "Long-term"})
@@ -492,6 +493,7 @@ if execute:
 
     # Split filtered_df into three based on the mid-header
     mid_levels = [
+        'No \ce{CO2} electrolyzers'
         'Direct Emissions from MPW Gasification',
         'Optimistic Bio-Feedstock Prices',
         'Tighter Short-Term Emission Limit'
@@ -514,16 +516,19 @@ if execute:
     base_cols = filtered_df.iloc[:, :2]  # Assuming these are 'Technology' and 'Unit'
 
     # Process each subset
+    df_noCO2_raw = split_by_mid_header(filtered_df, 'No \ce{CO2} electrolyzers')
     df_mpw_raw = split_by_mid_header(filtered_df, 'Direct Emissions from MPW Gasification')
     df_optbio_raw = split_by_mid_header(filtered_df, 'Optimistic Bio-Feedstock Prices')
     df_tight_raw = split_by_mid_header(filtered_df, 'Tighter Short-Term Emission Limit')
 
     # Clean columns
+    df_noCO2 = drop_mid_header(pd.concat([base_cols, df_noCO2_raw], axis=1))
     df_mpw = drop_mid_header(pd.concat([base_cols, df_mpw_raw], axis=1))
     df_optbio = drop_mid_header(pd.concat([base_cols, df_optbio_raw], axis=1))
     df_tight = drop_mid_header(pd.concat([base_cols, df_tight_raw], axis=1))  # No tech/unit columns here
 
     #Reset columns
+    df_noCO2 = df_noCO2.reset_index(drop=True)
     df_mpw = df_mpw.reset_index(drop=True)
     df_optbio = df_optbio.reset_index(drop=True)
     df_tight = df_tight.reset_index(drop=True)
@@ -552,6 +557,9 @@ if execute:
 
 
     # Create individual LaTeX tables
+    latex_table_noCO2 = make_latex(df_noCO2,
+                                 "Installed capacities for sensitivity case: No \ce{CO2} electrolyzers",
+                                 "tab:results_sensitivity_noCO2")
     latex_table_mpw = make_latex(df_mpw,
                                  "Installed capacities for sensitivity case: Direct Emissions from MPW Gasification",
                                  "tab:results_sensitivity_mpw")
@@ -563,6 +571,8 @@ if execute:
                                    "tab:results_sensitivity_tight")
 
     # Save to .tex
+    with open(os.path.join(output_dir, "filtered_data_sensitivity_noCO2.tex"), "w") as f:
+        f.write(latex_table_noCO2)
     with open(os.path.join(output_dir, "filtered_data_sensitivity_mpw.tex"), "w") as f:
         f.write(latex_table_mpw)
     with open(os.path.join(output_dir, "filtered_data_sensitivity_optbio.tex"), "w") as f:
@@ -581,10 +591,12 @@ if execute:
     base_cols_import = filtered_df_import.iloc[:, :2]
 
     # Split imports per case
+    import_noCO2_raw = split_by_mid_header(filtered_df_import, 'No \ce{CO2} electrolyzers')
     import_mpw_raw = split_by_mid_header(filtered_df_import, 'Direct Emissions from MPW Gasification')
     import_optbio_raw = split_by_mid_header(filtered_df_import, 'Optimistic Bio-Feedstock Prices')
     import_tight_raw = split_by_mid_header(filtered_df_import, 'Tighter Short-Term Emission Limit')
 
+    import_noCO2 = drop_mid_header(pd.concat([base_cols_import, import_noCO2_raw], axis=1))
     import_mpw = drop_mid_header(pd.concat([base_cols_import, import_mpw_raw], axis=1))
     import_optbio = drop_mid_header(pd.concat([base_cols_import, import_optbio_raw], axis=1))
     import_tight = drop_mid_header(pd.concat([base_cols_import, import_tight_raw], axis=1))
@@ -606,6 +618,8 @@ if execute:
     # Combine with labels and midrules
     import_combined = pd.concat([
         add_label_row(import_zeeland, "Zeeland"),
+        pd.DataFrame([['\\midrule'] + [''] * (import_mpw.shape[1] - 1)], columns=import_mpw.columns),
+        add_label_row(import_noCO2, "No \ce{CO2} electrolyzers"),
         pd.DataFrame([['\\midrule'] + [''] * (import_mpw.shape[1] - 1)], columns=import_mpw.columns),
         add_label_row(import_optbio, "Optimistic Bio-Feedstock Prices"),
         pd.DataFrame([['\\midrule'] + [''] * (import_mpw.shape[1] - 1)], columns=import_mpw.columns),
