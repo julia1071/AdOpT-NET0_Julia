@@ -151,7 +151,7 @@ if execute:
             return row.apply(lambda x: '-' if pd.isna(x) else int(x*100) if isinstance(x, float) else x)
         else:
             # Round floats (except NaN) to int
-            return row.apply(lambda x: '-' if pd.isna(x) else int(x) if isinstance(x, float) else x)
+            return row.apply(lambda x: '-' if pd.isna(x) else int(round(x, 0)) if isinstance(x, float) else x)
 
 
     filtered_df = filtered_df.apply(custom_format_row, axis=1)
@@ -308,7 +308,7 @@ if execute:
     df_import_combined.to_excel(import_combined_excel_path, index=True, merge_cells=True)
 
 #latex tables sensitivity
-execute = 1
+execute = 0
 
 if execute:
     # Load the Excel file
@@ -462,7 +462,7 @@ if execute:
             return row.apply(lambda x: '-' if pd.isna(x) else int(x * 100) if isinstance(x, float) else x)
         else:
             # Round floats (except NaN) to int
-            return row.apply(lambda x: '-' if pd.isna(x) else int(x) if isinstance(x, float) else x)
+            return row.apply(lambda x: '-' if pd.isna(x) else int(round(x, 0)) if isinstance(x, float) else x)
 
     filtered_df = filtered_df.apply(custom_format_row, axis=1)
     filtered_df_import = filtered_df_import.apply(custom_format_row, axis=1)
@@ -796,7 +796,7 @@ if execute:
             return row.apply(lambda x: '-' if pd.isna(x) else int(x*100) if isinstance(x, float) else x)
         else:
             # Round floats (except NaN) to int
-            return row.apply(lambda x: '-' if pd.isna(x) else int(x) if isinstance(x, float) else x)
+            return row.apply(lambda x: '-' if pd.isna(x) else int(round(x, 0)) if isinstance(x, float) else x)
 
 
     filtered_df = filtered_df.apply(custom_format_row, axis=1)
