@@ -482,7 +482,7 @@ if execute == 1:
     scope3 = 1
     run_with_emission_limit = 1
     # intervals = ['2040']
-    intervals = ['2030', '2040', '2050']
+    intervals = ['2030', '2050']
     interval_emissionLim = {'2030': 1, '2040': 0.5, '2050': 0}
     nr_DD_days = 10
     take_prev_solution = 0
