@@ -9,9 +9,9 @@ from openpyxl.reader.excel import load_workbook
 metric = "costs"       # Choose: "costs" or "emissions"
 scale_type = "per_tonne"   # Choose: "total" or "per_tonne"
 saveas = 'pdf'  # Options: "no", "svg", "pdf", "both"
-filename = 'TC_baseline_' + metric + '_' + scale_type + '_noCO2'
+filename = 'TC_baseline_' + metric + '_' + scale_type
 delayed = 0
-sensitivity = 1
+sensitivity = 0
 stacked = 0
 
 node = "Chemelot"
@@ -273,10 +273,10 @@ else:
             plt.Line2D([0], [0], color='#4c4d4c', linestyle='--', linewidth=1, label='Weighted average\nproduct '
                                                                                   'price 2024')
         )
-    # if node == "Chemelot" and not sensitivity:
-    #     ax.legend(handles=custom_legend, loc='upper center')
-    # else:
-    #     ax.legend(handles=custom_legend, loc='upper right')
+    if node == "Chemelot" and not sensitivity:
+        ax.legend(handles=custom_legend, loc='upper center')
+    else:
+        ax.legend(handles=custom_legend, loc='upper right')
 
 #Print costs and difference
 print(bf_limit_vals)

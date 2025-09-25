@@ -8,7 +8,7 @@ from matplotlib.ticker import PercentFormatter
 from adopt_net0 import extract_datasets_from_h5group
 
 #options
-sensitivity = 1
+sensitivity = 0
 zeeland = 0
 delayed = 0
 

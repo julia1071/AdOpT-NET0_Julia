@@ -4,7 +4,7 @@ import os
 
 from openpyxl.reader.excel import load_workbook
 
-execute = 0
+execute = 1
 
 if execute:
     # Load the Excel file

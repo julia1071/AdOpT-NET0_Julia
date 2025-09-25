@@ -63,7 +63,11 @@ def fetch_and_process_data_production(resultfolder, data_to_excel_path_olefins, 
                                 sensitivity_data = sensitivity
 
                             for tec in tec_mapping.keys():
-                                para = tec_mapping[tec][2] + "_output"
+                                alias = tec
+                                if tec == 'ElectricSMR_m_olefins':
+                                    tec = 'ElectricSMR_m'
+
+                                para = tec_mapping[alias][2] + "_output"
                                 if (interval, sensitivity_data, tec, para) in df_tec_operation:
                                     output_car = df_tec_operation[interval, sensitivity_data, tec, para]
 
@@ -85,6 +89,18 @@ def fetch_and_process_data_production(resultfolder, data_to_excel_path_olefins, 
                                             output_car) * (1 - frac_CC)
                                         result_data.loc[tec_CC, (result_type, sensitivity, interval)] = sum(
                                             output_car) * frac_CC
+
+                                    elif tec == 'ElectricSMR_m':
+                                        if (interval, sensitivity, 'WGS_m', 'syngas_r_input') in df_tec_operation:
+                                            input_WGS = sum(df_tec_operation[interval, sensitivity, 'WGS_m', 'syngas_r_input'])
+                                        else:
+                                            input_WGS = 0
+                                        if (interval, sensitivity, 'WGS_m_existing', 'syngas_r_input') in df_tec_operation:
+                                            input_WGS_existing = sum(df_tec_operation[interval, sensitivity, 'WGS_m_existing', 'syngas_r_input'])
+                                        else:
+                                            input_WGS_existing = 0
+                                        result_data.loc[alias, (result_type, sensitivity, interval)] = sum(output_car) - (input_WGS + input_WGS_existing)
+
                                     else:
                                         result_data.loc[tec, (result_type, sensitivity, interval)] = sum(output_car)
 
@@ -112,6 +128,10 @@ def fetch_and_process_data_production(resultfolder, data_to_excel_path_olefins, 
                                             output_car) * (1 - frac_CC)
                                         result_data.loc[tec_CC, (result_type, sensitivity, interval)] += sum(
                                             output_car) * frac_CC
+
+                                    elif tec == 'ElectricSMR_m':
+                                        result_data.loc[alias, (result_type, sensitivity, interval)] += sum(output_car)
+
                                     else:
                                         result_data.loc[tec, (result_type, sensitivity, interval)] += sum(output_car)
 
@@ -262,7 +282,7 @@ def plot_production_shares_stacked(df1, df2, categories, interpolation="spline",
                                        gridspec_kw={'hspace': 0.1}
                                        )
 
-        for ax, df, label in zip((ax1, ax2), (df1, df2), ('ammonia', 'ethylene')):
+        for ax, df, label in zip((ax1, ax2), (df1, df2), ('ammonia', 'olefins')):
             x, interpolated = interpolate(df, df['Year'].values)
             bottoms = np.zeros_like(x)
             for cat in categories:
@@ -348,7 +368,8 @@ def main():
         "WGS_m": ("Ammonia", "Electrification", "hydrogen", 0.168),
         "AEC": ("Ammonia", "Water electrolysis", "hydrogen", 0.168),
         "RWGS": ("Olefin", r"CO$_2$ utilization", "syngas", 0.270),
-        "DirectMeOHsynthesis": ("Olefins", r"CO$_2$ utilization", "methanol", 0.328),
+        "ElectricSMR_m_olefins": ("Olefin", "Electrification", "syngas_r", 0.270),
+        "DirectMeOHsynthesis": ("Olefin", r"CO$_2$ utilization", "methanol", 0.328),
         "EDH": ("Olefin", "Bio-based feedstock", "ethylene", 1),
         "PDH": ("Olefin", "Bio-based feedstock", "propylene", 1),
         "MPW2methanol": ("Olefin", "Plastic waste recycling", "methanol", 0.328),
