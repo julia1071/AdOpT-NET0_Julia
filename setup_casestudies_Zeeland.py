@@ -8,7 +8,7 @@ from adopt_net0.result_management.read_results import add_values_to_summary
 import pandas as pd
 
 #global functions
-execute_greenfield = 0
+execute_greenfield = 1
 execute_brownfield = 1
 read_all_greenfield = 0
 read_all_brownfield = 0
