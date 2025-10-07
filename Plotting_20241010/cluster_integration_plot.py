@@ -11,10 +11,10 @@ from adopt_net0 import extract_datasets_from_h5group
 
 # Define the data path
 resultfolder = "Z:/PyHub/PyHub_results/CM/Cluster_integration"
-data_to_excel_path = 'C:/EHubversions/AdOpT-NET0_Julia/Plotting/result_data.xlsx'
+data_to_excel_path = 'C:/Users/5637635/PycharmProjects/AdOpT-NET0_Julia/Plotting/result_data.xlsx'
 
 # select the type of plot from ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_spec_cor', 'size']
-plot_type = 'emissions_spec_cor'
+plot_type = 'costs_spec_cor'
 
 get_data = 0
 
@@ -152,9 +152,9 @@ if get_data == 0:
 
 # Configure Matplotlib to use LaTeX for text rendering and set font
 plt.rcParams.update({
-    "text.usetex": True,
+    # "text.usetex": True,
     "font.family": "serif",
-    "font.serif": ["Computer Modern Roman"],
+    # "font.serif": ["Computer Modern Roman"],
     "axes.labelsize": 12,
     "font.size": 12,
     "legend.fontsize": 10,
@@ -175,7 +175,7 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
     plot_data = plot_data.loc[types, scenarios]
 
     # Plotting
-    fig, ax = plt.subplots(figsize=(5.5, 3))
+    fig, ax = plt.subplots(figsize=(6, 3.5))
 
     # Define custom colors and layout
     colors = ['#F1DAC4', '#474973']
@@ -240,7 +240,7 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
             filename = filename + '_cor'
             ax.set_ylim(0, 1400)
     elif 'emission' in metric:
-        plt.ylabel(r'Specific emissions \\[0.1em] [kg CO$_2$/tonne product]')
+        plt.ylabel(f'Specific emissions \n [kg CO$_2$/tonne product]')
         filename = 'integration_emissions'
         ax.set_ylim(0, 1.4)
         if 'cor' in metric:
@@ -254,15 +254,15 @@ if plot_type in ['costs_spec', 'costs_spec_cor', 'emissions_spec', 'emissions_sp
     saveas = 'both'
 
     if saveas == 'svg':
-        savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/PaperFinal/{filename}.svg'
+        savepath = f'C:/Users/5637635/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/PaperFinal/{filename}.svg'
         plt.savefig(savepath, format='svg')
     elif saveas == 'pdf':
-        savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/PaperFinal/{filename}.pdf'
+        savepath = f'C:/Users/5637635/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/PaperFinal/{filename}.pdf'
         plt.savefig(savepath, format='pdf')
     elif saveas == 'both':
-        savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/PaperFinal/{filename}.pdf'
+        savepath = f'C:/Users/5637635/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/PaperFinal/{filename}.pdf'
         plt.savefig(savepath, format='pdf')
-        savepath = f'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/PaperFinal/{filename}.svg'
+        savepath = f'C:/Users/5637635/OneDrive - Universiteit Utrecht/Images and graphs/Collection CM/PaperFinal/{filename}.svg'
         plt.savefig(savepath, format='svg')
 
 
