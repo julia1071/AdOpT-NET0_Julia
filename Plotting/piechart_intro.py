@@ -33,8 +33,8 @@ other_industry = industry_emissions - chemical_emissions
 other_chemical = chemical_emissions - hvc_emissions
 main_labels = ['Other sectors\n(non industry)', 'Other industry', 'Other chemical industry', 'Fertilizer-olefin\nproduction']
 main_sizes = [other_emissions, other_industry, other_chemical, hvc_emissions]
-main_colors = ['#d0d0d0', '#804E49', '#E7DECD', '#B5A27D']
-# main_colors = ['#d0d0d0', '#fdae61', '#fee08b', '#d73027']
+# main_colors = ['#d0d0d0', '#804E49', '#E7DECD', '#B5A27D']
+main_colors = ['#bbb8de', '#D78547', '#9B3B77', '#561B53']
 main_explode = (0, 0.2, 0.2, 0.3)  # Pop out industry
 
 # === Sub pie chart (Industry breakdown) ===
@@ -46,7 +46,7 @@ main_explode = (0, 0.2, 0.2, 0.3)  # Pop out industry
 # industry_explode = (0.05, 0.05, 0.05)
 
 # === Create the figure ===
-fig, ax = plt.subplots(figsize=(8, 7))
+fig, ax = plt.subplots(figsize=(8, 6))
 ax.axis('equal')  # Keeps circles round
 
 # --- Main Pie ---
@@ -58,8 +58,8 @@ wedges, texts, autotexts = ax.pie(
     explode=main_explode,
     shadow=True,
     autopct='%1.0f%%',
-    pctdistance=0.8,
-    labeldistance=1.1,
+    pctdistance=0.85,
+    labeldistance=1.15,
     wedgeprops={'edgecolor': 'none'}
 )
 
@@ -67,15 +67,32 @@ wedges, texts, autotexts = ax.pie(
 # 'texts' is returned from ax.pie()
 for text in texts:
     text.set_fontproperties(open_sans)
-    text.set_fontsize(14)
+    # text.set_fontfamily('DejaVu Sans')
+    text.set_fontsize(16)
     text.set_weight('bold')
-    text.set_color('#262626')
+    text.set_color('black')
+
+offsets = [(0, 0), (0.2, 0), (-0.2, 0), (0, 0.2), (0, -0.2)]  # tweak to control thickness
+offsets = [(0, 0), (0.2, 0), (-0.2, 0), (0, 0.2)]  # tweak to control thickness
 
 for autotext in autotexts:
-    autotext.set_fontproperties(open_sans)
-    autotext.set_fontsize(12)
-    autotext.set_weight('bold')
-    autotext.set_color('#111211')
+    autotext.set_visible(False)
+
+for autotext in autotexts:
+    x, y = autotext.get_position()
+    txt = autotext.get_text()
+    for dx, dy in offsets:
+        ax.text(
+            x + dx*0.01, y + dy*0.01, txt,
+            fontproperties=open_sans,
+            fontsize=14,
+            color='white',
+            ha='center', va='center',
+            weight='bold',
+            zorder=10
+        )
+
+
 
 # # === Manually add labels ===
 # label_distances = [1.4, 1.5, 1.6, 1.5]
@@ -97,7 +114,7 @@ for autotext in autotexts:
 
 # === Title and save ===
 # plt.suptitle('Global Greenhouse Gas Emissions (2023)', fontsize=16, weight='bold')
-savepath = 'C:/Users/5637635/Documents/OneDrive - Universiteit Utrecht/MyPhD/Thesis/Thesis_plots/'
+savepath = 'C:/Users/5637635/OneDrive - Universiteit Utrecht/MyPhD/Thesis/Thesis_plots/'
 plt.savefig(f"{savepath}emissions_piechart.pdf", format='pdf', bbox_inches='tight')
 
 plt.show()
