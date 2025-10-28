@@ -31,7 +31,8 @@ hvc_emissions = 0.7 * chemical_emissions
 other_emissions = global_emissions - industry_emissions
 other_industry = industry_emissions - chemical_emissions
 other_chemical = chemical_emissions - hvc_emissions
-main_labels = ['Other sectors\n(non industry)', 'Other industry', 'Other chemical industry', 'Fertilizer-olefin\nproduction']
+main_labels = ['Other sectors\n(non industry)', 'Other industry', 'Other chemical industry', 'Fertilizer and olefin production']
+# main_labels = ['Other sectors\n(non industry)', 'Other industry', 'Other chemical industry', 'Fertilizer and olefin\nproduction']
 main_sizes = [other_emissions, other_industry, other_chemical, hvc_emissions]
 # main_colors = ['#d0d0d0', '#804E49', '#E7DECD', '#B5A27D']
 main_colors = ['#bbb8de', '#D78547', '#9B3B77', '#561B53']
@@ -72,8 +73,8 @@ for text in texts:
     text.set_weight('bold')
     text.set_color('black')
 
-offsets = [(0, 0), (0.2, 0), (-0.2, 0), (0, 0.2), (0, -0.2)]  # tweak to control thickness
-offsets = [(0, 0), (0.2, 0), (-0.2, 0), (0, 0.2)]  # tweak to control thickness
+offsets = [(0, 0), (0.1, 0), (-0.1, 0), (0, 0.1), (0, -0.1)]  # tweak to control thickness
+# offsets = [(0, 0), (0.2, 0), (-0.2, 0), (0, 0.2)]  # tweak to control thickness
 
 for autotext in autotexts:
     autotext.set_visible(False)
