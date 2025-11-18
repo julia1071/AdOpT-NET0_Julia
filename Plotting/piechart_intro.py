@@ -115,7 +115,9 @@ for autotext in autotexts:
 
 # === Title and save ===
 # plt.suptitle('Global Greenhouse Gas Emissions (2023)', fontsize=16, weight='bold')
+# savepath = 'C:/Users/5637635/OneDrive - Universiteit Utrecht/MyPhD/Thesis/Thesis_plots/'
+# plt.savefig(f"{savepath}emissions_piechart.pdf", format='pdf', bbox_inches='tight')
 savepath = 'C:/Users/5637635/OneDrive - Universiteit Utrecht/MyPhD/Thesis/Thesis_plots/'
-plt.savefig(f"{savepath}emissions_piechart.pdf", format='pdf', bbox_inches='tight')
+plt.savefig(f"{savepath}emissions_piechart.svg", format='svg', bbox_inches='tight')
 
 plt.show()
